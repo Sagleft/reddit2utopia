@@ -2,15 +2,10 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
-	"os"
-	"strings"
 
 	"github.com/badoux/goscraper"
 	"github.com/sagleft/go-reddit/reddit/v2"
@@ -46,14 +41,6 @@ func main() {
 
 */
 
-type solutionConfig struct {
-	BotToken            string `json:"bot_token"`
-	DisableNotification bool   `json:"disable_notification"`
-
-	ChatID        string
-	FromSubreddit string
-}
-
 type solution struct {
 	Config solutionConfig
 	Utopia *utopiaService
@@ -70,14 +57,10 @@ func newSolution() (*solution, error) {
 	}
 
 	// parse config file
-	if _, err := os.Stat(configJSONPath); os.IsNotExist(err) {
-		return nil, errors.New("failed to find config json")
-	}
-	jsonBytes, err := ioutil.ReadFile(configJSONPath)
+	err = parseConfig(&sol)
 	if err != nil {
 		return nil, err
 	}
-	json.Unmarshal(jsonBytes, &sol.Config)
 
 	// get cache
 	sol.Cache, err = NewCacheHandler(cacheFolderPath)
@@ -190,27 +173,6 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 		}*/
 	} else {
 		log.Println("debug, post ID: " + post.ID)
-	}
-	return true
-}
-
-func isPhotoInURL(url string) bool {
-	if strings.Contains(url, ".png") {
-		return true
-	}
-	if strings.Contains(url, ".jpg") {
-		return true
-	}
-	return false
-}
-
-func isRemoteFileExists(url string) bool {
-	resp, err := http.Head(url)
-	if err != nil {
-		return false
-	}
-	if resp.StatusCode != http.StatusOK {
-		return false
 	}
 	return true
 }
