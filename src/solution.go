@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"flag"
-	"fmt"
 	"log"
 
 	"github.com/badoux/goscraper"
@@ -162,13 +161,16 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 	sourceLink := html.A{Value: "[Source]", URL: "https://www.reddit.com" + post.Permalink}
 	postText := "<b>" + post.Title + "</b> " + sourceLink.Html()
 	if !isDebug {
-		fmt.Println(postText)
-		// TODO
-		/*err = sol.TG.sendPostImage(postImageURL, postText)
+
+		err := sol.Utopia.postMedia(mediaPost{
+			Text:         postText,
+			ImageURL:     postImageURL,
+			IsLocalImage: false,
+		})
 		if err != nil {
-			log.Println(postImageURL)
 			log.Println("Failed to send photo to channel: " + err.Error())
-		}*/
+		}
+
 	} else {
 		log.Println("debug, post ID: " + post.ID)
 	}
