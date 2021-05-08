@@ -113,12 +113,6 @@ func (sol *solution) parseArgs() error {
 }
 
 func (sol *solution) do() error {
-	/*err := sol.TG.sendPost("test post")
-	if err != nil {
-		return err
-	}
-	return nil*/
-
 	posts, _, err := reddit.DefaultClient().Subreddit.TopPosts(
 		context.Background(), sol.Config.FromSubreddit, &reddit.ListPostOptions{
 			ListOptions: reddit.ListOptions{
@@ -287,8 +281,6 @@ func (tg *telegramService) setNotificationMode(enabled bool) *telegramService {
 }*/
 
 func (tg *telegramService) sendPostImage(imageURL, postText string) error {
-	//log.Println("[DEBUG] use image url: " + imageURL)
-
 	tgAPIURL := "https://api.telegram.org/bot" + tg.BotToken +
 		"/sendPhoto?chat_id=" + tg.ChatID +
 		"&photo=" + url.QueryEscape(imageURL) +
