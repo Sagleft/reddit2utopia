@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"strings"
 
@@ -56,7 +56,7 @@ type solutionConfig struct {
 
 type solution struct {
 	Config solutionConfig
-	TG     *telegramService
+	Utopia *utopiaService
 	Cache  *CacheHandler
 }
 
@@ -87,9 +87,8 @@ func newSolution() (*solution, error) {
 
 	//log.Println("[DEBUG] chat id: "+sol.Config.ChatID, "bot token: "+sol.Config.BotToken)
 
-	// create tg obj
-	sol.TG = newTelegramService().setBotToken(sol.Config.BotToken).
-		setChatID(sol.Config.ChatID).setNotificationMode(sol.Config.DisableNotification)
+	// create utopia obj
+	// sol.Utopia = TODO
 
 	return &sol, nil
 }
@@ -182,11 +181,13 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 	sourceLink := html.A{Value: "[Source]", URL: "https://www.reddit.com" + post.Permalink}
 	postText := "<b>" + post.Title + "</b> " + sourceLink.Html()
 	if !isDebug {
-		err = sol.TG.sendPostImage(postImageURL, postText)
+		fmt.Println(postText)
+		// TODO
+		/*err = sol.TG.sendPostImage(postImageURL, postText)
 		if err != nil {
 			log.Println(postImageURL)
 			log.Println("Failed to send photo to channel: " + err.Error())
-		}
+		}*/
 	} else {
 		log.Println("debug, post ID: " + post.ID)
 	}
@@ -201,114 +202,6 @@ func isPhotoInURL(url string) bool {
 		return true
 	}
 	return false
-}
-
-/*
- _       _
-| |     | |
-| |_ ___| | ___  __ _ _ __ __ _ _ __ ___
-| __/ _ \ |/ _ \/ _` | '__/ _` | '_ ` _ \
-| ||  __/ |  __/ (_| | | | (_| | | | | | |
- \__\___|_|\___|\__, |_|  \__,_|_| |_| |_|
-                 __/ |
-                |___/
-*/
-
-type telegramService struct {
-	BotToken            string
-	ChatID              string
-	DisableNotification bool
-}
-
-type telegramResponse struct {
-	OK          bool                   `json:"ok"`
-	Result      telegramResponseResult `json:"result"`
-	Description string                 `json:"description"`
-}
-
-type telegramResponseResult struct {
-	MessageID int64 `json:"message_id"`
-	Date      int64 `json:"date"`
-}
-
-func newTelegramService() *telegramService {
-	return &telegramService{}
-}
-
-func (tg *telegramService) setBotToken(token string) *telegramService {
-	tg.BotToken = token
-	return tg
-}
-
-func (tg *telegramService) setChatID(chatID string) *telegramService {
-	tg.ChatID = chatID
-	return tg
-}
-
-func (tg *telegramService) setNotificationMode(enabled bool) *telegramService {
-	tg.DisableNotification = !enabled
-	return tg
-}
-
-/*func (tg *telegramService) sendPost(postText string) error {
-	tgAPIURL := "https://api.telegram.org/bot" + tg.BotToken +
-		"/sendMessage?chat_id=" + tg.ChatID +
-		"&text=" + url.QueryEscape(postText) +
-		"&parse_mode=HTML"
-
-	if tg.DisableNotification {
-		tgAPIURL += "&disable_notification=true"
-	}
-	resp, err := http.Get(tgAPIURL)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-
-	tResp := telegramResponse{}
-	parseErr := json.Unmarshal(body, &tResp)
-	if parseErr != nil {
-		return parseErr
-	}
-	if !tResp.OK {
-		return errors.New(tResp.Description)
-	}
-	return nil
-}*/
-
-func (tg *telegramService) sendPostImage(imageURL, postText string) error {
-	tgAPIURL := "https://api.telegram.org/bot" + tg.BotToken +
-		"/sendPhoto?chat_id=" + tg.ChatID +
-		"&photo=" + url.QueryEscape(imageURL) +
-		"&caption=" + url.QueryEscape(postText) +
-		"&parse_mode=HTML"
-
-	if tg.DisableNotification {
-		tgAPIURL += "&disable_notification=true"
-	}
-	resp, err := http.Get(tgAPIURL)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-
-	tResp := telegramResponse{}
-	parseErr := json.Unmarshal(body, &tResp)
-	if parseErr != nil {
-		return parseErr
-	}
-	if !tResp.OK {
-		return errors.New(tResp.Description)
-	}
-	return nil
 }
 
 func isRemoteFileExists(url string) bool {
