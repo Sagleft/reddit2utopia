@@ -145,7 +145,7 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 		return false
 	}
 
-	var postImageURL string = ""
+	var postImageURL string
 	if isPhotoInURL(post.URL) {
 		postImageURL = post.URL
 	} else {
