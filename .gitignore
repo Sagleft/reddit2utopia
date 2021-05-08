@@ -13,3 +13,8 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+build/
+src/reddit2utopia
+cache/
+config/config.json
