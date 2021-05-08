@@ -16,5 +16,6 @@
 
 build/
 src/reddit2utopia
+src/src
 cache/
 config/config.json
