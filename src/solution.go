@@ -68,29 +68,27 @@ func newSolution() (*solution, error) {
 		return nil, err
 	}
 
-	//log.Println("[DEBUG] chat id: "+sol.Config.ChatID, "bot token: "+sol.Config.BotToken)
-
 	// create utopia obj
-	// sol.Utopia = TODO
+	// sol.Utopia = newUtopiaService().setToken()
 
 	return &sol, nil
 }
 
 func (sol *solution) parseArgs() error {
 	fromSubreddit := flag.String("subreddit", "facepalm", "subbredit to crawl posts")
-	tgChannelLink := flag.String("channel", "yourchannellink", "telegram channel link to export posts")
+	channelID := flag.String("channel", "yourchannellink", "utopia channelID to export posts")
 	flag.Parse()
 	if fromSubreddit == nil {
 		return errors.New("failed to get -subreddit arg")
 	}
 	sol.Config.FromSubreddit = *fromSubreddit
-	if tgChannelLink == nil {
+	if channelID == nil {
 		return errors.New("failed to get -channel arg")
 	}
-	if *tgChannelLink == "" {
+	if *channelID == "" {
 		return errors.New("-channel arg is empty")
 	}
-	sol.Config.ChatID = *tgChannelLink
+	sol.Config.UtopiaChannelID = *channelID
 	return nil
 }
 
@@ -122,7 +120,7 @@ func (sol *solution) do() error {
 }
 
 func (sol *solution) processPost(post *reddit.Post) bool {
-	if sol.Cache.IsPostUsed(sol.Config.ChatID, post.ID) {
+	if sol.Cache.IsPostUsed(sol.Config.UtopiaChannelID, post.ID) {
 		//log.Println("post " + post.ID + " already used")
 		return false
 	}
@@ -149,7 +147,7 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 		return false
 	}
 
-	err := sol.Cache.MarkPostUsed(sol.Config.ChatID, post.ID)
+	err := sol.Cache.MarkPostUsed(sol.Config.UtopiaChannelID, post.ID)
 	if err != nil {
 		log.Println("Failed to mark post used: " + err.Error())
 		return false
