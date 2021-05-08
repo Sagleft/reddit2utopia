@@ -12,6 +12,8 @@ The bot processes only those posts to which a link or image is attached.
 
 File `config/config.json` contains the bot settings, fill in the data to connect to Utopia client.
 
+The account to which you will connect via the API must be a member of the chat \ channel to which you want to send messages, and also have the rights to write messages.
+
 ## bot cross-platform build
 
 just run
