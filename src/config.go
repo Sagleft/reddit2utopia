@@ -8,11 +8,17 @@ import (
 )
 
 type solutionConfig struct {
-	BotToken            string `json:"bot_token"`
-	DisableNotification bool   `json:"disable_notification"`
+	Utopia utopiaConfig `json:"utopia"` // data from config file
 
-	ChatID        string
-	FromSubreddit string
+	FromSubreddit   string // data from args
+	UtopiaChannelID string // data from args
+}
+
+type utopiaConfig struct {
+	Token        string `json:"token"`
+	Host         string `json:"host"`
+	Port         int    `json:"port"`
+	HTTPSEnabled bool   `json:"enable_https"`
 }
 
 func parseConfig(sol *solution) error {
