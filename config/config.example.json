@@ -2,7 +2,7 @@
     "utopia": {
         "host": "127.0.0.1",
         "token": "",
-        "port": "",
+        "port": 22000,
         "enable_https": false
     }
 }
