@@ -167,7 +167,11 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 	//sourceLink := html.A{Value: "[Source]", URL: "https://www.reddit.com" + post.Permalink}
 	sourceLink := "https://www.reddit.com" + post.Permalink
 	//postText := "<b>" + post.Title + "</b> " + sourceLink.Html()
-	postText := post.Title + "\n\n" + sourceLink
+	postText := post.Title
+	if sol.Config.ShowSource {
+		postText += "\n\n" + sourceLink
+	}
+
 	if !isDebug {
 
 		err := sol.Utopia.postMedia(sol.Config.UtopiaChannelID, mediaPost{

@@ -8,10 +8,13 @@ import (
 )
 
 type solutionConfig struct {
-	Utopia utopiaConfig `json:"utopia"` // data from config file
+	// data from config file
+	Utopia     utopiaConfig `json:"utopia"`
+	ShowSource bool         `json:"show_source"`
 
-	FromSubreddit   string // data from args
-	UtopiaChannelID string // data from args
+	// data from args
+	FromSubreddit   string
+	UtopiaChannelID string
 }
 
 type utopiaConfig struct {

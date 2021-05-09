@@ -4,5 +4,6 @@
         "token": "",
         "port": 22000,
         "enable_https": false
-    }
+    },
+    "show_source": true
 }
