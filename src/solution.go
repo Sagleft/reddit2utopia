@@ -162,7 +162,7 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 	postText := "<b>" + post.Title + "</b> " + sourceLink.Html()
 	if !isDebug {
 
-		err := sol.Utopia.postMedia(mediaPost{
+		err := sol.Utopia.postMedia(sol.Config.UtopiaChannelID, mediaPost{
 			Text:         postText,
 			ImageURL:     postImageURL,
 			IsLocalImage: false,

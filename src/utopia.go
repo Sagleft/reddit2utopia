@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/base64"
 	"errors"
+	"io/ioutil"
 
 	utopiago "github.com/Sagleft/utopialib-go"
 )
@@ -68,7 +70,19 @@ func (u *utopiaService) connect() error {
 	return nil
 }
 
-func (u *utopiaService) postMedia(media mediaPost) error {
-	// TODO
-	return nil
+func (u *utopiaService) postMedia(channelID string, media mediaPost) error {
+	var imageBytes []byte
+	var err error
+	if media.IsLocalImage {
+		imageBytes, err = ioutil.ReadFile(media.ImageURL)
+	} else {
+		imageBytes, err = getRemoteFileBytes(media.ImageURL)
+	}
+	if err != nil {
+		return err
+	}
+
+	base64Image := base64.StdEncoding.EncodeToString(imageBytes)
+	_, err = u.Client.SendChannelPicture(channelID, base64Image, media.Text, "photo.jpg")
+	return err
 }
