@@ -1,4 +1,5 @@
-# reddit2utopia
+![logo](https://github.com/Sagleft/reddit2utopia/raw/main/assets/logo.png)
+
 Bot for throwing posts from Reddit to Utopia
 
 ## concept
