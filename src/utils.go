@@ -30,10 +30,10 @@ func isRemoteFileExists(url string) bool {
 
 func getRemoteFileBytes(url string) ([]byte, error) {
 	response, err := http.Get(url)
-	defer response.Body.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer response.Body.Close()
 	if response.StatusCode != 200 {
 		return nil, errors.New("Received non 200 response code")
 	}

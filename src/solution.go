@@ -68,7 +68,14 @@ func newSolution() (*solution, error) {
 	}
 
 	// create utopia obj
-	// sol.Utopia = newUtopiaService().setToken()
+	sol.Utopia = newUtopiaService().setToken(sol.Config.Utopia.Token).
+		setHost(sol.Config.Utopia.Host).setPort(sol.Config.Utopia.Port).
+		setHTTPS(sol.Config.Utopia.HTTPSEnabled)
+
+	err = sol.Utopia.connect()
+	if err != nil {
+		return nil, err
+	}
 
 	return &sol, nil
 }
