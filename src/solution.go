@@ -8,7 +8,6 @@ import (
 
 	"github.com/badoux/goscraper"
 	"github.com/sagleft/go-reddit/reddit/v2"
-	"github.com/tabvn/html"
 )
 
 const (
@@ -165,8 +164,10 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 	}
 
 	isDebug := false
-	sourceLink := html.A{Value: "[Source]", URL: "https://www.reddit.com" + post.Permalink}
-	postText := "<b>" + post.Title + "</b> " + sourceLink.Html()
+	//sourceLink := html.A{Value: "[Source]", URL: "https://www.reddit.com" + post.Permalink}
+	sourceLink := "https://www.reddit.com" + post.Permalink
+	//postText := "<b>" + post.Title + "</b> " + sourceLink.Html()
+	postText := post.Title + "\n\n" + sourceLink
 	if !isDebug {
 
 		err := sol.Utopia.postMedia(sol.Config.UtopiaChannelID, mediaPost{
