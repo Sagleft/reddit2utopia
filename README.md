@@ -41,3 +41,9 @@ OR
 
 * QIWI: SAGET
 * Crypton: F50AF5410B1F3F4297043F0E046F205BCBAA76BEC70E936EB0F3AB94BF316804
+
+---
+
+![image](https://github.com/Sagleft/Sagleft/raw/master/image.png)
+
+### :globe_with_meridians: [Telegram канал](https://t.me/+VIvd8j6xvm9iMzhi)
