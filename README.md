@@ -41,6 +41,4 @@ In this example, the post from subreddit "anonim" will be taken and placed in ch
 
 ---
 
-![image](https://github.com/Sagleft/Sagleft/raw/master/image.png)
-
-### :globe_with_meridians: [Telegram канал](https://t.me/+VIvd8j6xvm9iMzhi)
+More useful information about Utopia on the website: [info.crypton.click](https://info.crypton.click)
