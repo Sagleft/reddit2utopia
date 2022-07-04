@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"github.com/badoux/goscraper"
-	"github.com/sagleft/go-reddit/reddit/v2"
+	"github.com/sagleft/go-reddit/v2/reddit"
 )
 
 const (
