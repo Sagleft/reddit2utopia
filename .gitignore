@@ -15,8 +15,6 @@
 # vendor/
 
 build/
-src/reddit2utopia
-src/src
-src/*.sh
+*.sh
 cache/
-config/config.json
+config.json
