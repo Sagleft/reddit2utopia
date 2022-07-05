@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-cd src
 platforms=("linux/386" "linux/amd64" "windows/386" "windows/amd64")
 
 for platform in "${platforms[@]}"
