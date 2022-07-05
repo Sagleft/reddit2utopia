@@ -7,7 +7,7 @@ do
     GOOS=${platform_split[0]}
     GOARCH=${platform_split[1]}
 
-    output_name='../build/bin/'bot'_'$GOOS'-'$GOARCH
+    output_name='build/'bot'_'$GOOS'-'$GOARCH
 
     if [ $GOOS = "windows" ]; then
         output_name+='.exe'
