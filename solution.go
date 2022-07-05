@@ -105,7 +105,7 @@ func (sol *solution) do() error {
 			postsUsedInQuery++
 		}
 
-		if postsUsedInQuery == postsPerQuery {
+		if postsUsedInQuery == sol.Config.PostsPerQuery {
 			// all need posts used in this query
 			return nil
 		}

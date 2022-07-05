@@ -14,8 +14,9 @@ type solution struct {
 
 type solutionConfig struct {
 	// data from config file
-	Utopia     utopiaConfig `json:"utopia"`
-	ShowSource bool         `json:"show_source"`
+	Utopia        utopiaConfig `json:"utopia"`
+	ShowSource    bool         `json:"show_source"`
+	PostsPerQuery int          `json:"posts_per_query"`
 
 	// data from args
 	FromSubreddit   string
