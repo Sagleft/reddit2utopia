@@ -10,19 +10,12 @@ import (
 	"github.com/sagleft/go-reddit/v2/reddit"
 )
 
-const (
-	configJSONPath      = "../config/config.json"
-	cacheFolderPath     = "../cache"
-	getSubredditPostsBy = "day"
-	subredditPostsLimit = 24
-	postsPerQuery       = 1
-)
-
 func main() {
 	sol, err := newSolution()
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 	err = sol.do()
 	if err != nil {
 		log.Fatalln(err)
@@ -38,12 +31,6 @@ func main() {
 |___/\___/|_|\__,_|\__|_|\___/|_| |_|
 
 */
-
-type solution struct {
-	Config solutionConfig
-	Utopia *utopiaService
-	Cache  *CacheHandler
-}
 
 func newSolution() (*solution, error) {
 	sol := solution{}
@@ -86,10 +73,12 @@ func (sol *solution) parseArgs() error {
 	if fromSubreddit == nil {
 		return errors.New("failed to get -subreddit arg")
 	}
+
 	sol.Config.FromSubreddit = *fromSubreddit
 	if channelID == nil {
 		return errors.New("failed to get -channel arg")
 	}
+
 	if *channelID == "" {
 		return errors.New("-channel arg is empty")
 	}
@@ -126,7 +115,6 @@ func (sol *solution) do() error {
 
 func (sol *solution) processPost(post *reddit.Post) bool {
 	if sol.Cache.IsPostUsed(sol.Config.UtopiaChannelID, post.ID) {
-		//log.Println("post " + post.ID + " already used")
 		return false
 	}
 
@@ -142,7 +130,6 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 		}
 		scrapedImages := scraped.Preview.Images
 		if len(scrapedImages) == 0 {
-			//log.Println("post " + post.ID + " not contains photo & webpreview")
 			return false
 		}
 		postImageURL = scrapedImages[0]

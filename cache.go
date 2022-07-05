@@ -7,12 +7,7 @@ import (
 	"os"
 )
 
-const (
-	cacheFilename      = "cache.json"
-	cachedElementValue = 1
-)
-
-// CacheHandler ..
+// CacheHandler - handler to cache data
 type CacheHandler struct {
 	Data      CachedData
 	CachePath string
@@ -20,7 +15,7 @@ type CacheHandler struct {
 
 type cacheElement int
 
-// CachedData ..
+// CachedData - cached data
 type CachedData struct {
 	Posts map[string]map[string]cacheElement `json:"posts"` //chatID (key): postID (key): 1
 }
