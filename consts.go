@@ -2,7 +2,7 @@ package main
 
 const (
 	configJSONPath      = "config.json"
-	cacheFolderPath     = "../cache"
+	cacheFolderPath     = "cache"
 	getSubredditPostsBy = "day"
 	subredditPostsLimit = 24
 	postsPerQuery       = 1
