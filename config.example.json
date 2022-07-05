@@ -5,6 +5,12 @@
         "port": 22000,
         "enable_https": false
     },
+    "reddit": {
+        "keyID": "",
+        "keySecret": "",
+        "user": "",
+        "pass": ""
+    },
     "show_source": true,
     "posts_per_query": 1
 }

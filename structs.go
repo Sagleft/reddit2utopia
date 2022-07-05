@@ -15,6 +15,7 @@ type solution struct {
 type solutionConfig struct {
 	// data from config file
 	Utopia        utopiaConfig `json:"utopia"`
+	Reddit        redditConfig `json:"reddit"`
 	ShowSource    bool         `json:"show_source"`
 	PostsPerQuery int          `json:"posts_per_query"`
 
@@ -28,4 +29,11 @@ type utopiaConfig struct {
 	Host         string `json:"host"`
 	Port         int    `json:"port"`
 	HTTPSEnabled bool   `json:"enable_https"`
+}
+
+type redditConfig struct {
+	APIKeyID  string `json:"keyID"`
+	APISecret string `json:"keySecret"`
+	User      string `json:"user"`
+	Password  string `json:"pass"`
 }

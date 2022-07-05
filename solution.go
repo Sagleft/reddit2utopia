@@ -87,7 +87,18 @@ func (sol *solution) parseArgs() error {
 }
 
 func (sol *solution) do() error {
-	posts, _, err := reddit.DefaultClient().Subreddit.TopPosts(
+	credentials := reddit.Credentials{
+		ID:       sol.Config.Reddit.APIKeyID,
+		Secret:   sol.Config.Reddit.APISecret,
+		Username: sol.Config.Reddit.User,
+		Password: sol.Config.Reddit.Password,
+	}
+	client, err := reddit.NewClient(credentials)
+	if err != nil {
+		return errors.New("failed to connect to reddit: " + err.Error())
+	}
+
+	posts, _, err := client.Subreddit.TopPosts(
 		context.Background(), sol.Config.FromSubreddit, &reddit.ListPostOptions{
 			ListOptions: reddit.ListOptions{
 				Limit: subredditPostsLimit,
