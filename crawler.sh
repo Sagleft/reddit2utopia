@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-scripts=("biden" "conspiracy" "facepalm" "news" "space" "todayilearned")
+scripts=("conspiracy" "facepalm" "news" "space" "todayilearned")
 
 cd bin
 
