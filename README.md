@@ -1,6 +1,6 @@
 ![logo](https://github.com/Sagleft/reddit2utopia/raw/main/assets/logo.png)
 
-Bot for throwing posts from Reddit to Utopia
+Bot for throwing posts from Reddit to Utopia. [Tutorial](https://info.crypton.click/articles/20-create-an-autofill-channel-in-utopia.html).
 
 ## concept
 
