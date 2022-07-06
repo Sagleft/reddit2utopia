@@ -9,18 +9,26 @@ This solution is useful for you if you want to create a channel in Utopia, but d
 You choose the subreddit and the channel in Utopia to transfer these posts to. Further along the crown, call this bot to transfer 1 post from the last posts in 24 hours.
 The bot processes only those posts to which a link or image is attached.
 
+The finished build can be found on the [releases page.](releases)
+
 ## setup
 
-File `config/config.json` contains the bot settings, fill in the data to connect to Utopia client.
+File `config.json` contains the bot settings, fill in the data to connect to Utopia client.
 
 The account to which you will connect via the API must be a member of the chat \ channel to which you want to send messages, and also have the rights to write messages.
 
 ## bot cross-platform build
 
-just run
+just run:
 
 ```bash
 bash make.sh
+```
+
+or build for current system:
+
+```bash
+go build
 ```
 
 To do this, you must have Golang v1.16.3 + installed on your system
