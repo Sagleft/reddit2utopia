@@ -169,14 +169,14 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 		return false
 	}
 
-	postURL := getRedditURL(post.URL)
+	postResourceURL := getRedditURL(post.URL)
 
 	var postImageURL string
-	if isPhotoInURL(postImageURL) {
-		postImageURL = postURL
+	if isPhotoInURL(postResourceURL) {
+		postImageURL = postResourceURL
 	} else {
 		// try find image in webpreview
-		scraped, err := goscraper.Scrape(postURL, 2)
+		scraped, err := goscraper.Scrape(postResourceURL, 2)
 		if err != nil {
 			log.Printf("failed to scrape webpreview for post %v: %s\n", post.ID, err.Error())
 			return false
