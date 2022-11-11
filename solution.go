@@ -165,6 +165,7 @@ func getRedditURL(url string) string {
 
 func (sol *solution) processPost(post *reddit.Post) bool {
 	if sol.Cache.IsPostUsed(sol.Config.UtopiaChannelID, post.ID) {
+		fmt.Printf("post %q already used", post.Title)
 		return false
 	}
 
@@ -182,6 +183,7 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 		}
 		scrapedImages := scraped.Preview.Images
 		if len(scrapedImages) == 0 {
+			fmt.Printf("ignore post %q without images", post.Title)
 			return false
 		}
 		postImageURL = scrapedImages[0]
@@ -219,6 +221,6 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 		log.Println("Failed to send photo to channel: " + err.Error())
 	}
 
-	fmt.Println("success")
+	fmt.Printf("mark post %q as used", post.Title)
 	return true
 }
