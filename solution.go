@@ -150,12 +150,20 @@ func (sol *solution) do() error {
 	return nil
 }
 
+func getRedditURL(url string) string {
+	if strings.Contains(url, "http://") || strings.Contains(url, "https://") {
+		return url
+	}
+
+	return redditHost + url
+}
+
 func (sol *solution) processPost(post *reddit.Post) bool {
 	if sol.Cache.IsPostUsed(sol.Config.UtopiaChannelID, post.ID) {
 		return false
 	}
 
-	postURL := redditHost + post.URL
+	postURL := getRedditURL(post.URL)
 
 	var postImageURL string
 	if isPhotoInURL(postImageURL) {
