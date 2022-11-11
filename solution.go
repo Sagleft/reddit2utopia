@@ -162,7 +162,7 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 		// try find image in webpreview
 		scraped, err := goscraper.Scrape(post.URL, 2)
 		if err != nil {
-			log.Println("failed to scrape webpreview for post " + post.ID)
+			log.Printf("failed to scrape webpreview for post %v: %s\n", post.ID, err.Error())
 			return false
 		}
 		scrapedImages := scraped.Preview.Images
