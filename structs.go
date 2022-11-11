@@ -20,7 +20,7 @@ type solutionConfig struct {
 	PostsPerQuery int          `json:"posts_per_query"`
 
 	// data from args
-	FromSubreddit   string
+	FromSubreddits  []string
 	UtopiaChannelID string
 }
 

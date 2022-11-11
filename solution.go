@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"log"
+	"strings"
 
 	"github.com/badoux/goscraper"
 	"github.com/sagleft/go-reddit/v2/reddit"
@@ -67,14 +68,14 @@ func newSolution() (*solution, error) {
 }
 
 func (sol *solution) parseArgs() error {
-	fromSubreddit := flag.String("subreddit", "facepalm", "subbredit to crawl posts")
+	fromSubreddits := flag.String("subreddit", "facepalm", "subbredit to crawl posts")
 	channelID := flag.String("channel", "yourchannellink", "utopia channelID to export posts")
 	flag.Parse()
-	if fromSubreddit == nil {
+	if fromSubreddits == nil {
 		return errors.New("failed to get -subreddit arg")
 	}
 
-	sol.Config.FromSubreddit = *fromSubreddit
+	sol.Config.FromSubreddits = strings.Split(*fromSubreddits, ",")
 	if channelID == nil {
 		return errors.New("failed to get -channel arg")
 	}
@@ -99,7 +100,9 @@ func (sol *solution) do() error {
 	}
 
 	posts, _, err := client.Subreddit.TopPosts(
-		context.Background(), sol.Config.FromSubreddit, &reddit.ListPostOptions{
+		context.Background(),
+		GetRandomArrString(sol.Config.FromSubreddits),
+		&reddit.ListPostOptions{
 			ListOptions: reddit.ListOptions{
 				Limit: subredditPostsLimit,
 			},

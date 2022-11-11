@@ -3,8 +3,10 @@ package main
 import (
 	"errors"
 	"io"
+	"math/rand"
 	"net/http"
 	"strings"
+	"time"
 )
 
 func isPhotoInURL(url string) bool {
@@ -35,11 +37,20 @@ func getRemoteFileBytes(url string) ([]byte, error) {
 	}
 	defer response.Body.Close()
 	if response.StatusCode != 200 {
-		return nil, errors.New("Received non 200 response code")
+		return nil, errors.New("received non 200 response code")
 	}
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
 	return body, nil
+}
+
+func GetRandomInt(min, max int) int {
+	rand.Seed(time.Now().UnixNano())
+	return rand.Intn(max-min+1) + min
+}
+
+func GetRandomArrString(arr []string) string {
+	return arr[GetRandomInt(0, len(arr)-1)]
 }
