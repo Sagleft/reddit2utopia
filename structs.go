@@ -14,10 +14,11 @@ type solution struct {
 
 type solutionConfig struct {
 	// data from config file
-	Utopia        utopiaConfig `json:"utopia"`
-	Reddit        redditConfig `json:"reddit"`
-	ShowSource    bool         `json:"show_source"`
-	PostsPerQuery int          `json:"posts_per_query"`
+	Utopia           utopiaConfig `json:"utopia"`
+	Reddit           redditConfig `json:"reddit"`
+	ShowSource       bool         `json:"show_source"`
+	MaxPostsPerQuery int          `json:"posts_per_query"`
+	UsePostsPerQuery int          `json:"use_posts_per_query"`
 
 	// data from args
 	FromSubreddits  []string

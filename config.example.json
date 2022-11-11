@@ -12,5 +12,6 @@
         "pass": ""
     },
     "show_source": true,
-    "posts_per_query": 1
+    "posts_per_query": 5,
+    "use_posts_per_query": 1
 }
