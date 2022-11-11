@@ -142,7 +142,11 @@ func (sol *solution) do() error {
 
 	postsUsedInQuery := 0
 	for _, post := range posts {
-		if sol.processPost(post) {
+		isPostUsed, err := sol.processPost(post)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		if isPostUsed {
 			postsUsedInQuery++
 		}
 
@@ -163,10 +167,10 @@ func getRedditURL(url string) string {
 	return redditHost + url
 }
 
-func (sol *solution) processPost(post *reddit.Post) bool {
+func (sol *solution) processPost(post *reddit.Post) (bool, error) {
 	if sol.Cache.IsPostUsed(sol.Config.UtopiaChannelID, post.ID) {
 		fmt.Printf("post %q already used\n", post.Title)
-		return false
+		return false, nil
 	}
 
 	postResourceURL := getRedditURL(post.URL)
@@ -179,29 +183,27 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 		scraped, err := goscraper.Scrape(postResourceURL, 2)
 		if err != nil {
 			log.Printf("failed to scrape webpreview for post %v: %s\n", post.ID, err.Error())
-			return false
+			return false, nil
 		}
 		scrapedImages := scraped.Preview.Images
 		if len(scrapedImages) == 0 {
 			fmt.Printf("ignore post %q without images\n", post.Title)
-			return false
+			return false, nil
 		}
 		postImageURL = scrapedImages[0]
 	}
 	if postImageURL == "" {
 		log.Println("post " + post.ID + " image is not recognized")
-		return false
+		return false, nil
 	}
 
 	err := sol.Cache.MarkPostUsed(sol.Config.UtopiaChannelID, post.ID)
 	if err != nil {
-		log.Println("Failed to mark post used: " + err.Error())
-		return false
+		return false, fmt.Errorf("failed to mark post used: %w", err)
 	}
 
 	if !isRemoteFileExists(postImageURL) {
-		log.Println("remote image does not exists: " + postImageURL)
-		return false
+		return false, fmt.Errorf("remote image does not exists: %s", postImageURL)
 	}
 
 	//sourceLink := html.A{Value: "[Source]", URL: "https://www.reddit.com" + post.Permalink}
@@ -218,9 +220,9 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 		IsLocalImage: false,
 	})
 	if err != nil {
-		log.Println("Failed to send photo to channel: " + err.Error())
+		return false, fmt.Errorf("failed to send photo to channel: %w", err)
 	}
 
 	fmt.Printf("mark post %q as used\n", post.Title)
-	return true
+	return true, nil
 }
