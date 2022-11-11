@@ -155,12 +155,14 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 		return false
 	}
 
+	postURL := redditHost + post.URL
+
 	var postImageURL string
-	if isPhotoInURL(post.URL) {
-		postImageURL = post.URL
+	if isPhotoInURL(postImageURL) {
+		postImageURL = postURL
 	} else {
 		// try find image in webpreview
-		scraped, err := goscraper.Scrape(post.URL, 2)
+		scraped, err := goscraper.Scrape(postURL, 2)
 		if err != nil {
 			log.Printf("failed to scrape webpreview for post %v: %s\n", post.ID, err.Error())
 			return false
@@ -189,7 +191,7 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 
 	isDebug := false
 	//sourceLink := html.A{Value: "[Source]", URL: "https://www.reddit.com" + post.Permalink}
-	sourceLink := "https://www.reddit.com" + post.Permalink
+	sourceLink := redditHost + post.Permalink
 	//postText := "<b>" + post.Title + "</b> " + sourceLink.Html()
 	postText := post.Title
 	if sol.Config.ShowSource {
