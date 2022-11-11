@@ -152,7 +152,7 @@ func (sol *solution) do() error {
 
 		if postsUsedInQuery == sol.Config.MaxPostsPerQuery ||
 			postsUsedInQuery == sol.Config.UsePostsPerQuery {
-			fmt.Printf("relevant posts not found (ignored %v)", postsUsedInQuery)
+			fmt.Printf("relevant posts not found (ignored %v)\n", postsUsedInQuery)
 			return nil
 		}
 	}
