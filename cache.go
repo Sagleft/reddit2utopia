@@ -13,11 +13,11 @@ type CacheHandler struct {
 	CachePath string
 }
 
-type cacheElement int
+type cacheElement struct{}
 
 // CachedData - cached data
 type CachedData struct {
-	Posts map[string]map[string]cacheElement `json:"posts"` //chatID (key): postID (key): 1
+	Posts map[string]map[string]cacheElement `json:"posts"` //chatID-subreddit (key): postID (key): {}
 }
 
 // NewCacheHandler - creates cache handler
@@ -57,9 +57,14 @@ func NewCacheHandler(cachePath string) (*CacheHandler, error) {
 	}, nil
 }
 
+func getCacheKey(chatID, subreddit string) string {
+	return chatID + "-" + subreddit
+}
+
 // IsPostUsed - check post already used
-func (cache *CacheHandler) IsPostUsed(chatID, postID string) bool {
-	chatPostIDs, chatIDused := cache.Data.Posts[chatID]
+func (cache *CacheHandler) IsPostUsed(chatID, postID, subreddit string) bool {
+	cacheKey := getCacheKey(chatID, subreddit)
+	chatPostIDs, chatIDused := cache.Data.Posts[cacheKey]
 	if !chatIDused {
 		return false
 	}
@@ -68,14 +73,15 @@ func (cache *CacheHandler) IsPostUsed(chatID, postID string) bool {
 }
 
 // MarkPostUsed in cache
-func (cache *CacheHandler) MarkPostUsed(chatID, postID string) error {
-	_, chatIDused := cache.Data.Posts[chatID]
+func (cache *CacheHandler) MarkPostUsed(chatID, postID, subreddit string) error {
+	cacheKey := getCacheKey(chatID, subreddit)
+	_, chatIDused := cache.Data.Posts[cacheKey]
 	if !chatIDused {
-		cache.Data.Posts[chatID] = map[string]cacheElement{
+		cache.Data.Posts[cacheKey] = map[string]cacheElement{
 			postID: cachedElementValue,
 		}
 	} else {
-		cache.Data.Posts[chatID][postID] = cachedElementValue
+		cache.Data.Posts[cacheKey][postID] = cachedElementValue
 	}
 
 	cacheJSONPath := cache.CachePath + "/" + cacheFilename

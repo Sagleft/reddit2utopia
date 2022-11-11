@@ -7,5 +7,6 @@ const (
 	getSubredditPostsBy = "day"
 	subredditPostsLimit = 24
 	cacheFilename       = "cache.json"
-	cachedElementValue  = 1
 )
+
+var cachedElementValue = struct{}{}

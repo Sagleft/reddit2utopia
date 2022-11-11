@@ -142,7 +142,7 @@ func (sol *solution) do() error {
 
 	postsUsedInQuery := 0
 	for _, post := range posts {
-		isPostUsed, err := sol.processPost(post)
+		isPostUsed, err := sol.processPost(post, subreddit)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -167,8 +167,8 @@ func getRedditURL(url string) string {
 	return redditHost + url
 }
 
-func (sol *solution) processPost(post *reddit.Post) (bool, error) {
-	if sol.Cache.IsPostUsed(sol.Config.UtopiaChannelID, post.ID) {
+func (sol *solution) processPost(post *reddit.Post, subreddit string) (bool, error) {
+	if sol.Cache.IsPostUsed(sol.Config.UtopiaChannelID, post.ID, subreddit) {
 		fmt.Printf("post %q already used\n", post.Title)
 		return false, nil
 	}
@@ -197,7 +197,7 @@ func (sol *solution) processPost(post *reddit.Post) (bool, error) {
 		return false, nil
 	}
 
-	err := sol.Cache.MarkPostUsed(sol.Config.UtopiaChannelID, post.ID)
+	err := sol.Cache.MarkPostUsed(sol.Config.UtopiaChannelID, post.ID, subreddit)
 	if err != nil {
 		return false, fmt.Errorf("failed to mark post used: %w", err)
 	}
