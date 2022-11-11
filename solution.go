@@ -69,7 +69,7 @@ func newSolution() (*solution, error) {
 
 func (sol *solution) parseArgs() error {
 	fromSubreddits := flag.String("subreddit", "facepalm", "subbredit to crawl posts")
-	channelID := flag.String("channel", "yourchannellink", "utopia channelID to export posts")
+	channelID := flag.String("channel", "your channel id", "utopia channelID to export posts")
 	flag.Parse()
 	if fromSubreddits == nil {
 		return errors.New("failed to get -subreddit arg")
