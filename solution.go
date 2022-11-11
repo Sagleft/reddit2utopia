@@ -7,6 +7,7 @@ import (
 	"log"
 	"strings"
 
+	utopiago "github.com/Sagleft/utopialib-go"
 	"github.com/badoux/goscraper"
 	"github.com/sagleft/go-reddit/v2/reddit"
 )
@@ -87,7 +88,29 @@ func (sol *solution) parseArgs() error {
 	return nil
 }
 
+func (sol *solution) isJoinedToChannel(channelID string) (bool, error) {
+	channels, err := sol.Utopia.Client.GetChannels(utopiago.GetChannelsTask{
+		SearchFilter: channelID,
+		ChannelType:  utopiago.ChannelTypeJoined,
+	})
+	if err != nil {
+		return false, err
+	}
+
+	return len(channels) > 0, nil
+}
+
 func (sol *solution) do() error {
+	isJoined, err := sol.isJoinedToChannel(sol.Config.UtopiaChannelID)
+	if err != nil {
+		return err
+	}
+	if !isJoined {
+		if _, err := sol.Utopia.Client.JoinChannel(sol.Config.UtopiaChannelID, ""); err != nil {
+			return err
+		}
+	}
+
 	credentials := reddit.Credentials{
 		ID:       sol.Config.Reddit.APIKeyID,
 		Secret:   sol.Config.Reddit.APISecret,

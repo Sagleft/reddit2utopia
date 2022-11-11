@@ -3,7 +3,7 @@ module bot
 go 1.18
 
 require (
-	github.com/Sagleft/utopialib-go v1.4.12
+	github.com/Sagleft/utopialib-go v1.11.0
 	github.com/badoux/goscraper v0.0.0-20190827161153-36995ce6b19f
 	github.com/sagleft/go-reddit/v2 v2.0.7
 )
