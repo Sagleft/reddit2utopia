@@ -173,9 +173,9 @@ func (sol *solution) processPost(post *reddit.Post) (bool, error) {
 		return false, nil
 	}
 
+	postImageURL := ""
 	postResourceURL := getRedditURL(post.URL)
 
-	var postImageURL string
 	if isPhotoInURL(postResourceURL) {
 		postImageURL = postResourceURL
 	} else {
@@ -187,7 +187,7 @@ func (sol *solution) processPost(post *reddit.Post) (bool, error) {
 		}
 		scrapedImages := scraped.Preview.Images
 		if len(scrapedImages) == 0 {
-			fmt.Printf("ignore post %q without images\n", post.Title)
+			fmt.Printf("ignore post %q without images. trying URL: %q\n", post.Title, postResourceURL)
 			return false, nil
 		}
 		postImageURL = scrapedImages[0]
