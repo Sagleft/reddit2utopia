@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"flag"
+	"fmt"
 	"log"
 	"strings"
 
@@ -122,9 +123,12 @@ func (sol *solution) do() error {
 		return errors.New("failed to connect to reddit: " + err.Error())
 	}
 
+	subreddit := GetRandomArrString(sol.Config.FromSubreddits)
+	fmt.Println("use subreddit: " + subreddit)
+
 	posts, _, err := client.Subreddit.TopPosts(
 		context.Background(),
-		GetRandomArrString(sol.Config.FromSubreddits),
+		subreddit,
 		&reddit.ListPostOptions{
 			ListOptions: reddit.ListOptions{
 				Limit: subredditPostsLimit,
@@ -197,7 +201,6 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 		return false
 	}
 
-	isDebug := false
 	//sourceLink := html.A{Value: "[Source]", URL: "https://www.reddit.com" + post.Permalink}
 	sourceLink := redditHost + post.Permalink
 	//postText := "<b>" + post.Title + "</b> " + sourceLink.Html()
@@ -206,19 +209,15 @@ func (sol *solution) processPost(post *reddit.Post) bool {
 		postText += "\n\n" + sourceLink
 	}
 
-	if !isDebug {
-
-		err := sol.Utopia.postMedia(sol.Config.UtopiaChannelID, mediaPost{
-			Text:         postText,
-			ImageURL:     postImageURL,
-			IsLocalImage: false,
-		})
-		if err != nil {
-			log.Println("Failed to send photo to channel: " + err.Error())
-		}
-
-	} else {
-		log.Println("debug, post ID: " + post.ID)
+	err = sol.Utopia.postMedia(sol.Config.UtopiaChannelID, mediaPost{
+		Text:         postText,
+		ImageURL:     postImageURL,
+		IsLocalImage: false,
+	})
+	if err != nil {
+		log.Println("Failed to send photo to channel: " + err.Error())
 	}
+
+	fmt.Println("success")
 	return true
 }
