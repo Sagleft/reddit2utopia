@@ -8,10 +8,15 @@ import (
 )
 
 func parseConfig(sol *solution) error {
-	if _, err := os.Stat(configJSONPath); os.IsNotExist(err) {
+	configPath := os.Getenv("CONFIG_FILE")
+	if configPath == "" {
+		configPath = defaultConfigJSONPath
+	}
+
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		return errors.New("failed to find config json")
 	}
-	jsonBytes, err := ioutil.ReadFile(configJSONPath)
+	jsonBytes, err := ioutil.ReadFile(defaultConfigJSONPath)
 	if err != nil {
 		return err
 	}
