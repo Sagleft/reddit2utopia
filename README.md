@@ -25,14 +25,6 @@ create new container:
 docker create --name redditbot uto9234/reddit2utopia
 ```
 
-*NOTE: The bot does not work in the background, it posts to the channel at the time of startup and shutdown. Thus, it is necessary to configure cron-assignments to start the bot at the time when it needs to post.*
-
-run bot:
-
-```bash
-docker 
-```
-
 ## setup
 
 File `config.json` contains the bot settings, fill in the data to connect to Utopia client.

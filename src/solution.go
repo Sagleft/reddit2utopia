@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	utopiago "github.com/Sagleft/utopialib-go"
@@ -14,6 +15,9 @@ import (
 )
 
 func main() {
+	log.Println("Hello, World. env: " + os.Getenv("API_HOST")) // temp
+	os.Exit(1)
+
 	sol, err := newSolution()
 	if err != nil {
 		log.Fatalln(err)

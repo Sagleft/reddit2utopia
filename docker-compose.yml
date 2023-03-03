@@ -1,0 +1,25 @@
+version: "2.2"
+
+services:
+  bot:
+    build: src/
+    environment:
+      API_HOST: utopia-api
+      API_PORT: 22825
+      API_TOKEN: FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      API_WS_PORT: 25000
+    depends_on:
+      - utopia-api
+    networks:
+      - unetwork
+
+  utopia-api:
+    image: uto9234/utopia-api
+    ports:
+      - 22825:22825
+      - 25000:25000
+    networks:
+      - unetwork
+
+networks:
+  unetwork:
