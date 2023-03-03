@@ -11,15 +11,6 @@ The bot processes only those posts to which a link or image is attached.
 
 The finished build can be found on the [releases page.](releases)
 
-## run in docker
-
-You'll also need this: [utopia-api-docker](https://github.com/Sagleft/utopia-api-docker)
-
-```
-docker pull uto9234/reddit2utopia
-docker run --name redditbot --restart=always -it uto9234/reddit2utopia
-```
-
 ## setup
 
 File `config.json` contains the bot settings, fill in the data to connect to Utopia client.
