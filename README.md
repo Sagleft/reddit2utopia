@@ -11,13 +11,26 @@ The bot processes only those posts to which a link or image is attached.
 
 The finished build can be found on the [releases page.](releases)
 
+## run without docker
+
+TODO
+
 ## run in docker
 
 You'll also need this: [utopia-api-docker](https://github.com/Sagleft/utopia-api-docker)
 
+create new container:
+
+```bash
+docker create --name redditbot uto9234/reddit2utopia
 ```
-docker pull uto9234/reddit2utopia
-docker run --name redditbot --restart=always -it uto9234/reddit2utopia
+
+*NOTE: The bot does not work in the background, it posts to the channel at the time of startup and shutdown. Thus, it is necessary to configure cron-assignments to start the bot at the time when it needs to post.*
+
+run bot:
+
+```bash
+docker 
 ```
 
 ## setup
