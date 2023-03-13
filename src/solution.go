@@ -22,8 +22,13 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	cronSpec := os.Getenv("CRON_SPEC")
+	if cronSpec == "" {
+		log.Fatalln("cron spec env is not set")
+	}
+
 	c := cron.New()
-	c.AddFunc(os.Getenv("CRON_SPEC"), func() {
+	c.AddFunc(cronSpec, func() {
 		err = sol.do()
 		if err != nil {
 			log.Fatalln(err)
