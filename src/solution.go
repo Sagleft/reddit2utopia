@@ -59,7 +59,7 @@ func newSolution() (*solution, error) {
 	}
 
 	// parse config file
-	err = parseConfig(&sol)
+	sol.Config, err = parseConfig()
 	if err != nil {
 		return nil, err
 	}
