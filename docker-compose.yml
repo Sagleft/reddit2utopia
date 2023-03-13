@@ -8,6 +8,7 @@ services:
       API_PORT: 22825
       API_TOKEN: FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       API_WS_PORT: 25000
+      CRON_SPEC: @every 1h
     depends_on:
       - utopia-api
     networks:

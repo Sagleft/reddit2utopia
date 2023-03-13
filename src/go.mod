@@ -17,4 +17,5 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.4.0 // indirect
 	gopkg.in/grignaak/tribool.v1 v1.0.0-20150312065122-d6bb19d816df // indirect
+	gopkg.in/robfig/cron.v2 v2.0.0-20150107220207-be2e0b0deed5 // indirect
 )

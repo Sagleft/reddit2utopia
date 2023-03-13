@@ -9,24 +9,29 @@ import (
 	"os"
 	"strings"
 
+	swissknife "github.com/Sagleft/swiss-knife"
 	utopiago "github.com/Sagleft/utopialib-go"
 	"github.com/badoux/goscraper"
 	"github.com/sagleft/go-reddit/v2/reddit"
+	"gopkg.in/robfig/cron.v2"
 )
 
 func main() {
-	log.Println("Hello, World. env: " + os.Getenv("API_HOST")) // temp
-	os.Exit(1)
-
 	sol, err := newSolution()
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	err = sol.do()
-	if err != nil {
-		log.Fatalln(err)
-	}
+	c := cron.New()
+	c.AddFunc(os.Getenv("CRON_SPEC"), func() {
+		err = sol.do()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	})
+	c.Start()
+
+	swissknife.RunInBackground()
 }
 
 /*
