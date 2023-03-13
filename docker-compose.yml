@@ -9,6 +9,7 @@ services:
       API_TOKEN: FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       API_WS_PORT: 25000
       CRON_SPEC: @every 1h
+      FROM_SUBREDDITS: interestingasfuck,facepalm
     depends_on:
       - utopia-api
     networks:

@@ -3,10 +3,8 @@ package main
 import (
 	"context"
 	"errors"
-	"flag"
 	"fmt"
 	"log"
-	"os"
 	"strings"
 
 	swissknife "github.com/Sagleft/swiss-knife"
@@ -17,24 +15,9 @@ import (
 )
 
 func main() {
-	sol, err := newSolution()
-	if err != nil {
+	if err := runApp(); err != nil {
 		log.Fatalln(err)
 	}
-
-	cronSpec := os.Getenv("CRON_SPEC")
-	if cronSpec == "" {
-		log.Fatalln("cron spec env is not set")
-	}
-
-	c := cron.New()
-	c.AddFunc(cronSpec, func() {
-		err = sol.do()
-		if err != nil {
-			log.Fatalln(err)
-		}
-	})
-	c.Start()
 
 	swissknife.RunInBackground()
 }
@@ -49,25 +32,22 @@ func main() {
 
 */
 
-func newSolution() (*solution, error) {
+func runApp() error {
 	sol := solution{}
 
-	// parse args
-	err := sol.parseArgs()
+	err := sol.checkConfig()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	// parse config file
 	sol.Config, err = parseConfig()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	// get cache
 	sol.Cache, err = NewCacheHandler(cacheFolderPath)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	// create utopia obj
@@ -75,31 +55,39 @@ func newSolution() (*solution, error) {
 		setHost(sol.Config.Utopia.Host).setPort(sol.Config.Utopia.Port).
 		setHTTPS(sol.Config.Utopia.HTTPSEnabled)
 
-	err = sol.Utopia.connect()
-	if err != nil {
-		return nil, err
+	if err := sol.Utopia.connect(); err != nil {
+		return err
 	}
 
-	return &sol, nil
+	if err := sol.setupCron(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (sol *solution) parseArgs() error {
-	fromSubreddits := flag.String("subreddit", "facepalm", "subbredit to crawl posts")
-	channelID := flag.String("channel", "your channel id", "utopia channelID to export posts")
-	flag.Parse()
-	if fromSubreddits == nil {
-		return errors.New("failed to get -subreddit arg")
+func (sol *solution) setupCron() error {
+	c := cron.New()
+	c.AddFunc(sol.Config.Main.Cron, func() {
+		err := sol.findAndPlacePost()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	})
+	c.Start()
+
+	return nil
+}
+
+func (sol *solution) checkConfig() error {
+	sol.FromSubreddits = strings.Split(sol.Config.Main.FromSubredditsRaw, ",")
+	if len(sol.FromSubreddits) == 0 {
+		return errors.New("subreddits is not set")
 	}
 
-	sol.Config.FromSubreddits = strings.Split(*fromSubreddits, ",")
-	if channelID == nil {
-		return errors.New("failed to get -channel arg")
+	if sol.Config.Main.UtopiaChannelID == "" {
+		return errors.New("utopia channel ID is not set")
 	}
-
-	if *channelID == "" {
-		return errors.New("-channel arg is empty")
-	}
-	sol.Config.UtopiaChannelID = *channelID
 	return nil
 }
 
@@ -115,13 +103,16 @@ func (sol *solution) isJoinedToChannel(channelID string) (bool, error) {
 	return len(channels) > 0, nil
 }
 
-func (sol *solution) do() error {
-	isJoined, err := sol.isJoinedToChannel(sol.Config.UtopiaChannelID)
+func (sol *solution) findAndPlacePost() error {
+	isJoined, err := sol.isJoinedToChannel(sol.Config.Main.UtopiaChannelID)
 	if err != nil {
 		return err
 	}
 	if !isJoined {
-		if _, err := sol.Utopia.Client.JoinChannel(sol.Config.UtopiaChannelID, ""); err != nil {
+		if _, err := sol.Utopia.Client.JoinChannel(
+			sol.Config.Main.UtopiaChannelID,
+			"",
+		); err != nil {
 			return err
 		}
 	}
@@ -137,7 +128,7 @@ func (sol *solution) do() error {
 		return errors.New("failed to connect to reddit: " + err.Error())
 	}
 
-	subreddit := GetRandomArrString(sol.Config.FromSubreddits)
+	subreddit := GetRandomArrString(sol.FromSubreddits)
 	fmt.Println("use subreddit: " + subreddit)
 
 	posts, _, err := client.Subreddit.TopPosts(
@@ -164,8 +155,8 @@ func (sol *solution) do() error {
 			postsUsedInQuery++
 		}
 
-		if postsUsedInQuery == sol.Config.MaxPostsPerQuery ||
-			postsUsedInQuery == sol.Config.UsePostsPerQuery {
+		if postsUsedInQuery == sol.Config.Main.MaxPostsPerQuery ||
+			postsUsedInQuery == sol.Config.Main.UsePostsPerQuery {
 			fmt.Printf("relevant posts not found (ignored %v)\n", postsUsedInQuery)
 			return nil
 		}
@@ -182,7 +173,7 @@ func getRedditURL(url string) string {
 }
 
 func (sol *solution) processPost(post *reddit.Post, subreddit string) (bool, error) {
-	if sol.Cache.IsPostUsed(sol.Config.UtopiaChannelID, post.ID, subreddit) {
+	if sol.Cache.IsPostUsed(sol.Config.Main.UtopiaChannelID, post.ID, subreddit) {
 		fmt.Printf("post %q already used\n", post.Title)
 		return false, nil
 	}
@@ -211,7 +202,7 @@ func (sol *solution) processPost(post *reddit.Post, subreddit string) (bool, err
 		return false, nil
 	}
 
-	err := sol.Cache.MarkPostUsed(sol.Config.UtopiaChannelID, post.ID, subreddit)
+	err := sol.Cache.MarkPostUsed(sol.Config.Main.UtopiaChannelID, post.ID, subreddit)
 	if err != nil {
 		return false, fmt.Errorf("failed to mark post used: %w", err)
 	}
@@ -224,11 +215,11 @@ func (sol *solution) processPost(post *reddit.Post, subreddit string) (bool, err
 	sourceLink := redditHost + post.Permalink
 	//postText := "<b>" + post.Title + "</b> " + sourceLink.Html()
 	postText := post.Title
-	if sol.Config.ShowSource {
+	if sol.Config.Main.ShowSource {
 		postText += "\n\n" + sourceLink
 	}
 
-	err = sol.Utopia.postMedia(sol.Config.UtopiaChannelID, mediaPost{
+	err = sol.Utopia.postMedia(sol.Config.Main.UtopiaChannelID, mediaPost{
 		Text:         postText,
 		ImageURL:     postImageURL,
 		IsLocalImage: false,
