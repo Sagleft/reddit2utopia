@@ -1,6 +1,9 @@
 package main
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 const (
 	redditHost            = "https://www.reddit.com"
@@ -21,3 +24,7 @@ const (
 )
 
 var cachedElementValue = struct{}{}
+
+var (
+	errPostsNotFound = errors.New("posts not found")
+)

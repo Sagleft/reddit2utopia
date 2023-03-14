@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 
@@ -66,22 +67,18 @@ func runApp() error {
 	}
 
 	log.Println("setup cron..")
-	if err := sol.setupCron(); err != nil {
+	if err := sol.setupCron(routes); err != nil {
 		return fmt.Errorf("setup cron: %w", err)
 	}
 	return nil
 }
 
-func (sol *solution) setupCron() error {
+func (sol *solution) setupCron(routes contentRoutes) error {
 	c := cron.New()
 	c.AddFunc(parseCronSpec(sol.Config.Main.Cron), func() {
-		err := sol.findAndPlacePost()
-		if err != nil {
-			log.Fatalln(err)
-		}
+		sol.processChannels(routes)
 	})
 	c.Start()
-
 	return nil
 }
 
@@ -89,7 +86,7 @@ func (sol *solution) markPostProcessing(isProcessing bool) {
 	sol.IsProcessingPost = isProcessing
 }
 
-func (sol *solution) findAndPlacePost() error {
+func (sol *solution) processChannels(routes contentRoutes) error {
 	if sol.IsProcessingPost {
 		log.Println("prevent multiple post processing. skip")
 		return nil
@@ -97,16 +94,48 @@ func (sol *solution) findAndPlacePost() error {
 
 	sol.markPostProcessing(true)
 	defer sol.markPostProcessing(false)
-
 	fmt.Println()
 
-	subreddit := GetRandomArrString(sol.FromSubreddits)
-	fmt.Println("use subreddit: " + subreddit)
+	for utopiaChannelID, channelData := range routes {
+		channelSubreddits := arrayShuffle(channelData.Subreddits)
+
+		if err := sol.processSubreddits(channelSubreddits, utopiaChannelID); err != nil {
+			return fmt.Errorf("process subreddits: %w", err)
+		}
+	}
+	return nil
+}
+
+func (sol *solution) processSubreddits(
+	channelSubreddits []string,
+	utopiaChannelID string,
+) error {
+	for _, subreddit := range channelSubreddits {
+		fmt.Println("use subreddit: " + subreddit)
+
+		if err := sol.processSubreddit(subreddit, utopiaChannelID); err != nil {
+
+			if errors.Is(err, errPostsNotFound) {
+				log.Println(err, "try another subreddit..")
+				continue
+			}
+
+			return err
+		}
+		break
+	}
+	return nil
+}
+
+func (sol *solution) processSubreddit(
+	subreddit string,
+	utopiaChannelID string,
+) error {
 
 	ctx, ctxCancel := context.WithTimeout(context.Background(), getPostsTimeout)
 	defer ctxCancel()
 
-	posts, _, err := client.Subreddit.TopPosts(
+	posts, _, err := sol.Reddit.Subreddit.TopPosts(
 		ctx,
 		subreddit,
 		&reddit.ListPostOptions{
@@ -121,13 +150,12 @@ func (sol *solution) findAndPlacePost() error {
 	}
 
 	if len(posts) == 0 {
-		log.Println("posts not found. ignore")
-		return nil
+		return errPostsNotFound
 	}
 
 	postsUsedInQuery := 0
 	for _, post := range posts {
-		isPostUsed, err := sol.processPost(post, subreddit)
+		isPostUsed, err := sol.processPost(post, subreddit, utopiaChannelID)
 		if err != nil {
 			return fmt.Errorf("process post: %w", err)
 		}
@@ -138,14 +166,18 @@ func (sol *solution) findAndPlacePost() error {
 		if postsUsedInQuery == sol.Config.Main.MaxPostsPerQuery ||
 			postsUsedInQuery == sol.Config.Main.UsePostsPerQuery {
 			fmt.Printf("relevant posts not found (ignored %v)\n", postsUsedInQuery)
-			return nil
+			return errPostsNotFound
 		}
 	}
 	return nil
 }
 
-func (sol *solution) processPost(post *reddit.Post, subreddit string) (bool, error) {
-	if sol.Cache.IsPostUsed(sol.Config.Main.UtopiaChannelID, post.ID, subreddit) {
+func (sol *solution) processPost(
+	post *reddit.Post,
+	subreddit string,
+	utopiaChannelID string,
+) (bool, error) {
+	if sol.Cache.IsPostUsed(utopiaChannelID, post.ID, subreddit) {
 		fmt.Printf("post %q already used\n", post.Title)
 		return false, nil
 	}
@@ -174,7 +206,7 @@ func (sol *solution) processPost(post *reddit.Post, subreddit string) (bool, err
 		return false, nil
 	}
 
-	err := sol.Cache.MarkPostUsed(sol.Config.Main.UtopiaChannelID, post.ID, subreddit)
+	err := sol.Cache.MarkPostUsed(utopiaChannelID, post.ID, subreddit)
 	if err != nil {
 		return false, fmt.Errorf("failed to mark post used: %w", err)
 	}
@@ -191,7 +223,7 @@ func (sol *solution) processPost(post *reddit.Post, subreddit string) (bool, err
 		postText += "\n\n" + sourceLink
 	}
 
-	err = sol.Utopia.postMedia(sol.Config.Main.UtopiaChannelID, mediaPost{
+	err = sol.Utopia.postMedia(utopiaChannelID, mediaPost{
 		Text:         postText,
 		ImageURL:     postImageURL,
 		IsLocalImage: false,

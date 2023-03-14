@@ -14,7 +14,6 @@ type solution struct {
 	Cache  *CacheHandler
 	Reddit *reddit.Client
 
-	FromSubreddits   []string
 	IsProcessingPost bool
 }
 

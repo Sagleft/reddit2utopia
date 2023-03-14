@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/Sagleft/uchatbot-engine"
@@ -95,4 +97,14 @@ func getChats(r contentRoutes) []uchatbot.Chat {
 		})
 	}
 	return c
+}
+
+func arrayShuffle(a []string) []string {
+	rand.Seed(time.Now().UnixNano())
+
+	for i := len(a) - 1; i > 0; i-- {
+		j := rand.Intn(i + 1)
+		a[i], a[j] = a[j], a[i]
+	}
+	return a
 }
