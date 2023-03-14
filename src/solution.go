@@ -8,8 +8,6 @@ import (
 	"strings"
 
 	swissknife "github.com/Sagleft/swiss-knife"
-	"github.com/Sagleft/utopialib-go/v2/pkg/consts"
-	"github.com/Sagleft/utopialib-go/v2/pkg/structs"
 	"github.com/badoux/goscraper"
 	"github.com/sagleft/go-reddit/v2/reddit"
 	"gopkg.in/robfig/cron.v2"
@@ -27,9 +25,10 @@ func main() {
 }
 
 func runApp() error {
+	var err error
 	sol := solution{}
 
-	var err error
+	log.Println("load config..")
 	sol.Config, err = parseConfig()
 	if err != nil {
 		return fmt.Errorf("parse config: %w", err)
@@ -47,8 +46,10 @@ func runApp() error {
 	// create utopia obj
 	sol.Utopia = newUtopiaService().setToken(sol.Config.Utopia.Token).
 		setHost(sol.Config.Utopia.Host).setPort(sol.Config.Utopia.Port).
-		setHTTPS(sol.Config.Utopia.HTTPSEnabled)
+		setHTTPS(sol.Config.Utopia.HTTPSEnabled).
+		setChannelID(sol.Config.Main.UtopiaChannelID, sol.Config.Main.UtopiaChannelPassword)
 
+	log.Println("connect to Utopia Network..")
 	if err := sol.Utopia.connect(); err != nil {
 		return fmt.Errorf("connect to utopia: %w", err)
 	}
@@ -61,6 +62,7 @@ func runApp() error {
 		return fmt.Errorf("load bot pubkey: %w", err)
 	}
 
+	log.Println("setup cron..")
 	if err := sol.setupCron(); err != nil {
 		return fmt.Errorf("setup cron: %w", err)
 	}
@@ -92,33 +94,8 @@ func (sol *solution) checkConfig() error {
 	return nil
 }
 
-func (sol *solution) isJoinedToChannel(channelID string) (bool, error) {
-	channels, err := sol.Utopia.Conn.GetClient().GetChannels(structs.GetChannelsTask{
-		SearchFilter: channelID,
-		ChannelType:  consts.ChannelTypeJoined,
-	})
-	if err != nil {
-		return false, err
-	}
-
-	return len(channels) > 0, nil
-}
-
 func (sol *solution) findAndPlacePost() error {
 	fmt.Println()
-
-	isJoined, err := sol.isJoinedToChannel(sol.Config.Main.UtopiaChannelID)
-	if err != nil {
-		return err
-	}
-	if !isJoined {
-		if _, err := sol.Utopia.Conn.GetClient().JoinChannel(
-			sol.Config.Main.UtopiaChannelID,
-			"",
-		); err != nil {
-			return err
-		}
-	}
 
 	credentials := reddit.Credentials{
 		ID:       sol.Config.Reddit.APIKeyID,

@@ -22,12 +22,13 @@ type solutionConfig struct {
 }
 
 type mainConfig struct {
-	ShowSource        bool   `envconfig:"SHOW_SOURCE" default:"false"`
-	MaxPostsPerQuery  int    `envconfig:"MAX_POSTS_PER_QUERY" default:"1"`
-	UsePostsPerQuery  int    `envconfig:"POSTS_PER_QUERY" default:"5"`
-	Cron              string `envconfig:"CRON_SPEC" default:"@every 1h"`
-	UtopiaChannelID   string `envconfig:"UTOPIA_CHANNEL_ID" required:"true"`
-	FromSubredditsRaw string `envconfig:"FROM_SUBREDDITS" required:"true"`
+	ShowSource            bool   `envconfig:"SHOW_SOURCE" default:"false"`
+	MaxPostsPerQuery      int    `envconfig:"MAX_POSTS_PER_QUERY" default:"1"`
+	UsePostsPerQuery      int    `envconfig:"POSTS_PER_QUERY" default:"5"`
+	Cron                  string `envconfig:"CRON_SPEC" default:"@every 1h"`
+	UtopiaChannelID       string `envconfig:"UTOPIA_CHANNEL_ID" required:"true"`
+	UtopiaChannelPassword string `envconfig:"UTOPIA_CHANNEL_PASS"`
+	FromSubredditsRaw     string `envconfig:"FROM_SUBREDDITS" required:"true"`
 }
 
 type utopiaConfig struct {

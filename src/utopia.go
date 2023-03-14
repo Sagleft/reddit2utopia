@@ -25,10 +25,12 @@ import (
 */
 
 type utopiaService struct {
-	Token        string
-	Host         string
-	Port         int
-	HTTPSEnabled bool
+	Token           string
+	Host            string
+	Port            int
+	HTTPSEnabled    bool
+	ChannelID       string
+	ChannelPassword string
 
 	Conn                *uchatbot.ChatBot
 	ConnEstablishedOnce bool
@@ -37,6 +39,12 @@ type utopiaService struct {
 
 func newUtopiaService() *utopiaService {
 	return &utopiaService{}
+}
+
+func (u *utopiaService) setChannelID(ID, password string) *utopiaService {
+	u.ChannelID = ID
+	u.ChannelPassword = password
+	return u
 }
 
 func (u *utopiaService) setToken(token string) *utopiaService {
@@ -65,6 +73,14 @@ func (u *utopiaService) connect() error {
 		protocol += "s"
 	}
 
+	chats := []uchatbot.Chat{}
+	if u.ChannelID != "" {
+		chats = append(chats, uchatbot.Chat{
+			ID:       u.ChannelID,
+			Password: u.ChannelPassword,
+		})
+	}
+
 	var err error
 	u.Conn, err = uchatbot.NewChatBot(uchatbot.ChatBotData{
 		Config: utopiago.Config{
@@ -73,6 +89,7 @@ func (u *utopiaService) connect() error {
 			Token:    u.Token,
 			Port:     u.Port,
 		},
+		Chats: chats,
 		Callbacks: uchatbot.ChatBotCallbacks{
 			OnContactMessage:        func(im structs.InstantMessage) {},
 			OnChannelMessage:        func(wcm structs.WsChannelMessage) {},
