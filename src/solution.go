@@ -103,9 +103,10 @@ func (sol *solution) findAndPlacePost() error {
 		Username: sol.Config.Reddit.User,
 		Password: sol.Config.Reddit.Password,
 	}
+	// TODO: move to init
 	client, err := reddit.NewClient(credentials)
 	if err != nil {
-		return errors.New("failed to connect to reddit: " + err.Error())
+		return fmt.Errorf("connect to reddit: %w", err)
 	}
 
 	subreddit := GetRandomArrString(sol.FromSubreddits)
@@ -129,7 +130,7 @@ func (sol *solution) findAndPlacePost() error {
 	for _, post := range posts {
 		isPostUsed, err := sol.processPost(post, subreddit)
 		if err != nil {
-			log.Fatalln(err)
+			return fmt.Errorf("process post: %w", err)
 		}
 		if isPostUsed {
 			postsUsedInQuery++
