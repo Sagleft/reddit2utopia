@@ -4,12 +4,19 @@ services:
   bot:
     build: src/
     environment:
-      API_HOST: utopia-api
-      API_PORT: 22825
-      API_TOKEN: FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-      API_WS_PORT: 25000
+      SHOW_SOURCE: false
+      MAX_POSTS_PER_QUERY: 1
+      POSTS_PER_QUERY: 5
       CRON_SPEC: @every 1h
+      UTOPIA_CHANNEL_ID: E36921F241EA9A3ABE03308BF41E0C37
       FROM_SUBREDDITS: interestingasfuck,facepalm
+      UTOPIA_TOKEN: FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      UTOPIA_HOST: utopia-api
+      UTOPIA_PORT: 22825
+      REDDIT_KEY_ID:
+      REDDIT_SECRET:
+      REDDIT_USER:
+      REDDIT_PASS:
     depends_on:
       - utopia-api
     networks:
@@ -19,7 +26,6 @@ services:
     image: uto9234/utopia-api
     ports:
       - 22825:22825
-      - 25000:25000
     networks:
       - unetwork
 
