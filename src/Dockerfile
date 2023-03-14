@@ -5,6 +5,7 @@ RUN go build -o /app/bot
 
 FROM gcr.io/distroless/base
 WORKDIR /app
+RUN mkdir cache
 COPY --from=builder /app /app
 
 CMD ["./bot"]

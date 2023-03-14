@@ -1,5 +1,7 @@
 .git
 .github
 .vscode
-src/bot
 make.sh
+example.env
+.env
+bot
