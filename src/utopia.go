@@ -31,6 +31,7 @@ type utopiaService struct {
 	HTTPSEnabled    bool
 	ChannelID       string
 	ChannelPassword string
+	AccountNickname string
 
 	Conn                *uchatbot.ChatBot
 	ConnEstablishedOnce bool
@@ -44,6 +45,11 @@ func newUtopiaService() *utopiaService {
 func (u *utopiaService) setChannelID(ID, password string) *utopiaService {
 	u.ChannelID = ID
 	u.ChannelPassword = password
+	return u
+}
+
+func (u *utopiaService) setNickname(nickname string) *utopiaService {
+	u.AccountNickname = nickname
 	return u
 }
 
@@ -145,9 +151,9 @@ func (u *utopiaService) updateAccountName() error {
 		return fmt.Errorf("get own contact: %w", err)
 	}
 
-	if data.Nick == defaultAccountName {
+	if u.AccountNickname != "" && data.Nick != u.AccountNickname {
 		log.Println("update account name..")
-		if err := u.Conn.SetAccountNickname(botNickname); err != nil {
+		if err := u.Conn.SetAccountNickname(u.AccountNickname); err != nil {
 			return fmt.Errorf("set account nickname: %w", err)
 		}
 	}

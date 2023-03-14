@@ -23,6 +23,7 @@ type solutionConfig struct {
 }
 
 type mainConfig struct {
+	BotNickname           string `envconfig:"BOT_NICKNAME" default:"UnboundMedia"`
 	ShowSource            bool   `envconfig:"SHOW_SOURCE" default:"false"`
 	MaxPostsPerQuery      int    `envconfig:"MAX_POSTS_PER_QUERY" default:"1"`
 	UsePostsPerQuery      int    `envconfig:"POSTS_PER_QUERY" default:"5"`

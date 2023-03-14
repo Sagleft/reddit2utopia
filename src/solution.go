@@ -47,7 +47,8 @@ func runApp() error {
 	sol.Utopia = newUtopiaService().setToken(sol.Config.Utopia.Token).
 		setHost(sol.Config.Utopia.Host).setPort(sol.Config.Utopia.Port).
 		setHTTPS(sol.Config.Utopia.HTTPSEnabled).
-		setChannelID(sol.Config.Main.UtopiaChannelID, sol.Config.Main.UtopiaChannelPassword)
+		setChannelID(sol.Config.Main.UtopiaChannelID, sol.Config.Main.UtopiaChannelPassword).
+		setNickname(sol.Config.Main.BotNickname)
 
 	log.Println("connect to Utopia Network..")
 	if err := sol.Utopia.connect(); err != nil {

@@ -4,6 +4,7 @@ services:
   bot:
     build: src/
     environment:
+      BOT_NICKNAME: UnboundMedia
       SHOW_SOURCE: false
       MAX_POSTS_PER_QUERY: 1
       POSTS_PER_QUERY: 5
