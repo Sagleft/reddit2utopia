@@ -38,8 +38,8 @@ type utopiaConfig struct {
 }
 
 type redditConfig struct {
-	APIKeyID  string `json:"REDDIT_KEY_ID" required:"true"`
-	APISecret string `json:"REDDIT_SECRET" required:"true"`
-	User      string `json:"REDDIT_USER" required:"true"`
-	Password  string `json:"REDDIT_PASS" required:"true"`
+	APIKeyID  string `envconfig:"REDDIT_KEY_ID" required:"true"`
+	APISecret string `envconfig:"REDDIT_SECRET" required:"true"`
+	User      string `envconfig:"REDDIT_USER" required:"true"`
+	Password  string `envconfig:"REDDIT_PASS" required:"true"`
 }
