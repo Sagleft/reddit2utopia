@@ -104,6 +104,8 @@ func (sol *solution) isJoinedToChannel(channelID string) (bool, error) {
 }
 
 func (sol *solution) findAndPlacePost() error {
+	fmt.Println()
+
 	isJoined, err := sol.isJoinedToChannel(sol.Config.Main.UtopiaChannelID)
 	if err != nil {
 		return err
