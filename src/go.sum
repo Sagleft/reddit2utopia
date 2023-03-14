@@ -1,8 +1,8 @@
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 github.com/Sagleft/swiss-knife v1.3.0 h1:d9Fl9IEPvCgYZhAGeu0R5A6QirGFwM2PST37LLJjXOc=
 github.com/Sagleft/swiss-knife v1.3.0/go.mod h1:Zw4i+m87cG3p8NJjqlW1uz6+P2VycFl5ssVt2VfCITM=
-github.com/Sagleft/uchatbot-engine v1.8.5 h1:ZaAuyDNTlPzagXNp7UONUW7vvV5J0zfC7Tok0acdcSI=
-github.com/Sagleft/uchatbot-engine v1.8.5/go.mod h1:GFECdzvJ2XH4bWpFx9aeoguqVBaYw2cCHq5jq1gtYek=
+github.com/Sagleft/uchatbot-engine v1.9.1 h1:zqf487KEOu79BB6AD+Bex12jPo5kD9eMhxrAODevYtI=
+github.com/Sagleft/uchatbot-engine v1.9.1/go.mod h1:GFECdzvJ2XH4bWpFx9aeoguqVBaYw2cCHq5jq1gtYek=
 github.com/Sagleft/utopialib-go/v2 v2.7.2 h1:QtuxSPr9F/Y1eZ64SkQOuDJTY6qwn1ixUqD2dQwx+7k=
 github.com/Sagleft/utopialib-go/v2 v2.7.2/go.mod h1:9HuTLrcyVlaNIW3Vw4FCMrlOFt2fJ0ZI8WBOk5+2e6M=
 github.com/badoux/goscraper v0.0.0-20190827161153-36995ce6b19f h1:K7yQFgSzse/bjP0DaNlmgdlg8u0HiIQax0HdTGnaMaY=

@@ -8,6 +8,7 @@ import (
 	"github.com/Sagleft/uchatbot-engine"
 	utopiago "github.com/Sagleft/utopialib-go/v2"
 	"github.com/Sagleft/utopialib-go/v2/pkg/structs"
+	"github.com/fatih/color"
 )
 
 /*
@@ -60,11 +61,8 @@ func (u *utopiaService) connect() error {
 		protocol += "s"
 	}
 
-	/*if !u.Client.CheckClientConnection() {
-		return errors.New("failed to connect to Utopia client")
-	}*/
-
-	uchatbot.NewChatBot(uchatbot.ChatBotData{
+	var err error
+	u.Conn, err = uchatbot.NewChatBot(uchatbot.ChatBotData{
 		Config: utopiago.Config{
 			Protocol: protocol,
 			Host:     u.Host,
@@ -79,9 +77,13 @@ func (u *utopiaService) connect() error {
 				return welcomeMessage
 			},
 		},
+		UseErrorCallback: true,
+		DisableEvents:    true,
+		ErrorCallback: func(err error) {
+			color.Red(err.Error())
+		},
 	})
-
-	return nil
+	return err
 }
 
 func (u *utopiaService) postMedia(channelID string, media mediaPost) error {
