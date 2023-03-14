@@ -72,7 +72,7 @@ func runApp() error {
 
 func (sol *solution) setupCron() error {
 	c := cron.New()
-	c.AddFunc(sol.Config.Main.Cron, func() {
+	c.AddFunc(parseCronSpec(sol.Config.Main.Cron), func() {
 		err := sol.findAndPlacePost()
 		if err != nil {
 			log.Fatalln(err)
