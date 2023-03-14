@@ -8,7 +8,8 @@ import (
 	"strings"
 
 	swissknife "github.com/Sagleft/swiss-knife"
-	utopiago "github.com/Sagleft/utopialib-go"
+	"github.com/Sagleft/utopialib-go/v2/pkg/consts"
+	"github.com/Sagleft/utopialib-go/v2/pkg/structs"
 	"github.com/badoux/goscraper"
 	"github.com/sagleft/go-reddit/v2/reddit"
 	"gopkg.in/robfig/cron.v2"
@@ -92,9 +93,9 @@ func (sol *solution) checkConfig() error {
 }
 
 func (sol *solution) isJoinedToChannel(channelID string) (bool, error) {
-	channels, err := sol.Utopia.Client.GetChannels(utopiago.GetChannelsTask{
+	channels, err := sol.Utopia.Client.GetChannels(structs.GetChannelsTask{
 		SearchFilter: channelID,
-		ChannelType:  utopiago.ChannelTypeJoined,
+		ChannelType:  consts.ChannelTypeJoined,
 	})
 	if err != nil {
 		return false, err

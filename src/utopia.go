@@ -5,7 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 
-	utopiago "github.com/Sagleft/utopialib-go"
+	utopiago "github.com/Sagleft/utopialib-go/v2"
 )
 
 /*
@@ -25,7 +25,7 @@ type utopiaService struct {
 	Port         int
 	HTTPSEnabled bool
 
-	Client utopiago.UtopiaClient
+	Client utopiago.Client
 }
 
 func newUtopiaService() *utopiaService {
@@ -58,12 +58,13 @@ func (u *utopiaService) connect() error {
 		protocol += "s"
 	}
 
-	u.Client = utopiago.UtopiaClient{
+	u.Client = utopiago.NewUtopiaClient(utopiago.Config{
 		Protocol: protocol,
-		Token:    u.Token,
 		Host:     u.Host,
+		Token:    u.Token,
 		Port:     u.Port,
-	}
+	})
+
 	if !u.Client.CheckClientConnection() {
 		return errors.New("failed to connect to Utopia client")
 	}

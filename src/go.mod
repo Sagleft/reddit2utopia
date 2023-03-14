@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/Sagleft/swiss-knife v1.3.0
-	github.com/Sagleft/utopialib-go v1.11.0
+	github.com/Sagleft/utopialib-go/v2 v2.7.2
 	github.com/badoux/goscraper v0.0.0-20190827161153-36995ce6b19f
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/sagleft/go-reddit/v2 v2.0.7
@@ -13,6 +13,7 @@ require (
 )
 
 require (
+	github.com/beefsack/go-rate v0.0.0-20220214233405-116f4ca011a0 // indirect
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be // indirect
 	github.com/ctengiz/evtwebsocket v0.0.0-20180717104640-fc3583982591 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
