@@ -1,5 +1,7 @@
 package main
 
+import "time"
+
 const (
 	redditHost            = "https://www.reddit.com"
 	defaultConfigJSONPath = "config.json"
@@ -14,6 +16,10 @@ const (
 	coinTag               = "CRP"
 	welcomeMessage        = "Hi. I'm just a bot that works with content"
 	errConnectionMessage  = "failed to connect to Utopia Client"
+)
+
+const (
+	getPostsTimeout = time.Second * 5
 )
 
 var cachedElementValue = struct{}{}

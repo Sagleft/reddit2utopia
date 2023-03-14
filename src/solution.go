@@ -100,6 +100,7 @@ func (sol *solution) markPostProcessing(isProcessing bool) {
 
 func (sol *solution) findAndPlacePost() error {
 	if sol.IsProcessingPost {
+		log.Println("prevent multiple post processing. skip")
 		return nil
 	}
 
@@ -123,8 +124,11 @@ func (sol *solution) findAndPlacePost() error {
 	subreddit := GetRandomArrString(sol.FromSubreddits)
 	fmt.Println("use subreddit: " + subreddit)
 
+	ctx, ctxCancel := context.WithTimeout(context.Background(), getPostsTimeout)
+	defer ctxCancel()
+
 	posts, _, err := client.Subreddit.TopPosts(
-		context.Background(),
+		ctx,
 		subreddit,
 		&reddit.ListPostOptions{
 			ListOptions: reddit.ListOptions{
