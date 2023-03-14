@@ -12,6 +12,8 @@ const (
 	botLogName            = "R2U bot"
 	donateAddress         = "F50AF5410B1F3F4297043F0E046F205BCBAA76BEC70E936EB0F3AB94BF316804"
 	coinTag               = "CRP"
+	welcomeMessage        = "Hi. I'm just a bot that works with content"
+	errConnectionMessage  = "failed to connect to Utopia Client"
 )
 
 var cachedElementValue = struct{}{}

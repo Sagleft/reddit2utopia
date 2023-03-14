@@ -1,6 +1,8 @@
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 github.com/Sagleft/swiss-knife v1.3.0 h1:d9Fl9IEPvCgYZhAGeu0R5A6QirGFwM2PST37LLJjXOc=
 github.com/Sagleft/swiss-knife v1.3.0/go.mod h1:Zw4i+m87cG3p8NJjqlW1uz6+P2VycFl5ssVt2VfCITM=
+github.com/Sagleft/uchatbot-engine v1.9.1 h1:zqf487KEOu79BB6AD+Bex12jPo5kD9eMhxrAODevYtI=
+github.com/Sagleft/uchatbot-engine v1.9.1/go.mod h1:GFECdzvJ2XH4bWpFx9aeoguqVBaYw2cCHq5jq1gtYek=
 github.com/Sagleft/utopialib-go/v2 v2.7.2 h1:QtuxSPr9F/Y1eZ64SkQOuDJTY6qwn1ixUqD2dQwx+7k=
 github.com/Sagleft/utopialib-go/v2 v2.7.2/go.mod h1:9HuTLrcyVlaNIW3Vw4FCMrlOFt2fJ0ZI8WBOk5+2e6M=
 github.com/badoux/goscraper v0.0.0-20190827161153-36995ce6b19f h1:K7yQFgSzse/bjP0DaNlmgdlg8u0HiIQax0HdTGnaMaY=
@@ -32,8 +34,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/sagleft/go-reddit/v2 v2.0.7 h1:KP9U6pPT1HURbRjDR7EJtEgHXIlqVVwNFsiXWNnTARw=
 github.com/sagleft/go-reddit/v2 v2.0.7/go.mod h1:nsac4y74VPMZ3KKRPEWEtmEjmaOC0cWx17fLtWLIFAs=
-github.com/sagleft/simple-cron v1.4.1 h1:k95Z8Gxb6BB7X7a4byEbI38mFEI5hYC3lUstCS5ktkg=
-github.com/sagleft/simple-cron v1.4.1/go.mod h1:a++6/wI1ZzgYe+lCAKlWBwR8xBYpPl1oXJpa5rUHlJI=
+github.com/sagleft/simple-cron v1.5.0 h1:ecLM1ScefaNN9MPz//CQnW0569zQGQSusFV6EyTqgAk=
+github.com/sagleft/simple-cron v1.5.0/go.mod h1:a++6/wI1ZzgYe+lCAKlWBwR8xBYpPl1oXJpa5rUHlJI=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
 github.com/stretchr/objx v0.5.0/go.mod h1:Yh+to48EsGEfYuaHDzXPcE3xhTkx73EhmCGUpEOglKo=

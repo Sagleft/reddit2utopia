@@ -2,11 +2,15 @@ package main
 
 import (
 	"encoding/base64"
-	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
+	"strings"
 
+	"github.com/Sagleft/uchatbot-engine"
 	utopiago "github.com/Sagleft/utopialib-go/v2"
+	"github.com/Sagleft/utopialib-go/v2/pkg/structs"
+	"github.com/fatih/color"
 )
 
 /*
@@ -26,7 +30,9 @@ type utopiaService struct {
 	Port         int
 	HTTPSEnabled bool
 
-	Client utopiago.Client
+	Conn                *uchatbot.ChatBot
+	ConnEstablishedOnce bool
+	Pubkey              string
 }
 
 func newUtopiaService() *utopiaService {
@@ -59,17 +65,44 @@ func (u *utopiaService) connect() error {
 		protocol += "s"
 	}
 
-	u.Client = utopiago.NewUtopiaClient(utopiago.Config{
-		Protocol: protocol,
-		Host:     u.Host,
-		Token:    u.Token,
-		Port:     u.Port,
+	var err error
+	u.Conn, err = uchatbot.NewChatBot(uchatbot.ChatBotData{
+		Config: utopiago.Config{
+			Protocol: protocol,
+			Host:     u.Host,
+			Token:    u.Token,
+			Port:     u.Port,
+		},
+		Callbacks: uchatbot.ChatBotCallbacks{
+			OnContactMessage:        func(im structs.InstantMessage) {},
+			OnChannelMessage:        func(wcm structs.WsChannelMessage) {},
+			OnPrivateChannelMessage: func(wcm structs.WsChannelMessage) {},
+			WelcomeMessage: func(userPubkey string) string {
+				return welcomeMessage
+			},
+		},
+		UseErrorCallback: true,
+		DisableEvents:    true,
+		ErrorCallback:    u.onError,
 	})
+	return err
+}
 
-	if !u.Client.CheckClientConnection() {
-		return errors.New("failed to connect to Utopia client")
+func (u *utopiaService) onError(err error) {
+	if err == nil {
+		return
 	}
-	return nil
+
+	if strings.Contains(err.Error(), errConnectionMessage) {
+		if !u.ConnEstablishedOnce {
+			log.Println("wait for reconnect to Utopia client..")
+
+			u.ConnEstablishedOnce = true
+			return
+		}
+	}
+
+	color.Red(err.Error())
 }
 
 func (u *utopiaService) postMedia(channelID string, media mediaPost) error {
@@ -85,20 +118,32 @@ func (u *utopiaService) postMedia(channelID string, media mediaPost) error {
 	}
 
 	base64Image := base64.StdEncoding.EncodeToString(imageBytes)
-	_, err = u.Client.SendChannelPicture(channelID, base64Image, media.Text, "photo.jpg")
+	_, err = u.Conn.GetClient().SendChannelPicture(channelID, base64Image, media.Text, "photo.jpg")
 	return err
 }
 
 func (u *utopiaService) updateAccountName() error {
-	data, err := u.Client.GetOwnContact()
+	data, err := u.Conn.GetClient().GetOwnContact()
 	if err != nil {
 		return fmt.Errorf("get own contact: %w", err)
 	}
 
 	if data.Nick == defaultAccountName {
-		if err := u.Client.SetProfileData(botNickname, "", ""); err != nil {
+		log.Println("update account name..")
+		if err := u.Conn.SetAccountNickname(botNickname); err != nil {
 			return fmt.Errorf("set account nickname: %w", err)
 		}
 	}
+	return nil
+}
+
+func (u *utopiaService) loadBotPubkey() error {
+	var err error
+	u.Pubkey, err = u.Conn.GetOwnPubkey()
+	if err != nil {
+		return fmt.Errorf("get own pubkey: %w", err)
+	}
+
+	log.Printf("bot pubkey: %s\n", u.Pubkey)
 	return nil
 }

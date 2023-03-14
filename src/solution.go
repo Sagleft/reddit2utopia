@@ -57,6 +57,10 @@ func runApp() error {
 		return fmt.Errorf("update account name: %w", err)
 	}
 
+	if err := sol.Utopia.loadBotPubkey(); err != nil {
+		return fmt.Errorf("load bot pubkey: %w", err)
+	}
+
 	if err := sol.setupCron(); err != nil {
 		return fmt.Errorf("setup cron: %w", err)
 	}
@@ -89,7 +93,7 @@ func (sol *solution) checkConfig() error {
 }
 
 func (sol *solution) isJoinedToChannel(channelID string) (bool, error) {
-	channels, err := sol.Utopia.Client.GetChannels(structs.GetChannelsTask{
+	channels, err := sol.Utopia.Conn.GetClient().GetChannels(structs.GetChannelsTask{
 		SearchFilter: channelID,
 		ChannelType:  consts.ChannelTypeJoined,
 	})
@@ -108,7 +112,7 @@ func (sol *solution) findAndPlacePost() error {
 		return err
 	}
 	if !isJoined {
-		if _, err := sol.Utopia.Client.JoinChannel(
+		if _, err := sol.Utopia.Conn.GetClient().JoinChannel(
 			sol.Config.Main.UtopiaChannelID,
 			"",
 		); err != nil {
@@ -161,14 +165,6 @@ func (sol *solution) findAndPlacePost() error {
 		}
 	}
 	return nil
-}
-
-func getRedditURL(url string) string {
-	if strings.Contains(url, "http://") || strings.Contains(url, "https://") {
-		return url
-	}
-
-	return redditHost + url
 }
 
 func (sol *solution) processPost(post *reddit.Post, subreddit string) (bool, error) {
