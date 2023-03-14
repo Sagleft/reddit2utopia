@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	swissknife.PrintIntroMessage(botLogName, donateAddress, "CRP")
+	swissknife.PrintIntroMessage(botLogName, donateAddress, coinTag)
 
 	if err := runApp(); err != nil {
 		log.Fatalln(err)
@@ -25,16 +25,6 @@ func main() {
 	log.Println("bot started")
 	swissknife.RunInBackground()
 }
-
-/*
-           _       _   _
-          | |     | | (_)
- ___  ___ | |_   _| |_ _  ___  _ __
-/ __|/ _ \| | | | | __| |/ _ \| '_ \
-\__ \ (_) | | |_| | |_| | (_) | | | |
-|___/\___/|_|\__,_|\__|_|\___/|_| |_|
-
-*/
 
 func runApp() error {
 	sol := solution{}
