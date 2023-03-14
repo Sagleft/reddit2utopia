@@ -39,16 +39,16 @@ func runApp() error {
 	var err error
 	sol.Config, err = parseConfig()
 	if err != nil {
-		return err
+		return fmt.Errorf("parse config: %w", err)
 	}
 
 	if err := sol.checkConfig(); err != nil {
-		return err
+		return fmt.Errorf("check config: %w", err)
 	}
 
 	sol.Cache, err = NewCacheHandler(cacheFolderPath)
 	if err != nil {
-		return err
+		return fmt.Errorf("create cache handler: %w", err)
 	}
 
 	// create utopia obj
@@ -57,7 +57,7 @@ func runApp() error {
 		setHTTPS(sol.Config.Utopia.HTTPSEnabled)
 
 	if err := sol.Utopia.connect(); err != nil {
-		return err
+		return fmt.Errorf("connect to utopia: %w", err)
 	}
 
 	if err := sol.Utopia.updateAccountName(); err != nil {
@@ -65,9 +65,8 @@ func runApp() error {
 	}
 
 	if err := sol.setupCron(); err != nil {
-		return err
+		return fmt.Errorf("setup cron: %w", err)
 	}
-
 	return nil
 }
 
