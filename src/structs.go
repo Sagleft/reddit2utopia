@@ -22,9 +22,9 @@ type solutionConfig struct {
 }
 
 type mainConfig struct {
-	ShowSource        bool   `envconfig:"SHOW_SOURCE" default:false`
-	MaxPostsPerQuery  int    `envconfig:"MAX_POSTS_PER_QUERY" default:1`
-	UsePostsPerQuery  int    `envconfig:"POSTS_PER_QUERY" default:5`
+	ShowSource        bool   `envconfig:"SHOW_SOURCE" default:"false"`
+	MaxPostsPerQuery  int    `envconfig:"MAX_POSTS_PER_QUERY" default:"1"`
+	UsePostsPerQuery  int    `envconfig:"POSTS_PER_QUERY" default:"5"`
 	Cron              string `envconfig:"CRON_SPEC" default:"@every 1h"`
 	UtopiaChannelID   string `envconfig:"UTOPIA_CHANNEL_ID"`
 	FromSubredditsRaw string `envconfig:"FROM_SUBREDDITS"`
@@ -33,8 +33,8 @@ type mainConfig struct {
 type utopiaConfig struct {
 	Token        string `envconfig:"UTOPIA_TOKEN"`
 	Host         string `envconfig:"UTOPIA_HOST" default:"127.0.0.1"`
-	Port         int    `envconfig:"UTOPIA_PORT" default:20000`
-	HTTPSEnabled bool   `envconfig:"UTOPIA_USE_HTTPS" default:false`
+	Port         int    `envconfig:"UTOPIA_PORT" default:"20000"`
+	HTTPSEnabled bool   `envconfig:"UTOPIA_USE_HTTPS" default:"false"`
 }
 
 type redditConfig struct {
