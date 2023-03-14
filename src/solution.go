@@ -126,6 +126,11 @@ func (sol *solution) findAndPlacePost() error {
 		return err
 	}
 
+	if len(posts) == 0 {
+		log.Println("posts not found. ignore")
+		return nil
+	}
+
 	postsUsedInQuery := 0
 	for _, post := range posts {
 		isPostUsed, err := sol.processPost(post, subreddit)
