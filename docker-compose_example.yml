@@ -26,6 +26,8 @@ services:
     image: uto9234/utopia-api
     ports:
       - 22825:22825
+    environment:
+      XDG_RUNTIME_DIR: /tmp/runtime-root
     networks:
       - unetwork
 
