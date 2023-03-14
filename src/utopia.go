@@ -4,6 +4,8 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
+	"log"
+	"strings"
 
 	"github.com/Sagleft/uchatbot-engine"
 	utopiago "github.com/Sagleft/utopialib-go/v2"
@@ -28,7 +30,8 @@ type utopiaService struct {
 	Port         int
 	HTTPSEnabled bool
 
-	Conn *uchatbot.ChatBot
+	Conn                *uchatbot.ChatBot
+	ConnEstablishedOnce bool
 }
 
 func newUtopiaService() *utopiaService {
@@ -79,11 +82,26 @@ func (u *utopiaService) connect() error {
 		},
 		UseErrorCallback: true,
 		DisableEvents:    true,
-		ErrorCallback: func(err error) {
-			color.Red(err.Error())
-		},
+		ErrorCallback:    u.onError,
 	})
 	return err
+}
+
+func (u *utopiaService) onError(err error) {
+	if err == nil {
+		return
+	}
+
+	if strings.Contains(err.Error(), errConnectionMessage) {
+		if !u.ConnEstablishedOnce {
+			log.Println("wait for reconnect to Utopia client..")
+
+			u.ConnEstablishedOnce = true
+			return
+		}
+	}
+
+	color.Red(err.Error())
 }
 
 func (u *utopiaService) postMedia(channelID string, media mediaPost) error {
