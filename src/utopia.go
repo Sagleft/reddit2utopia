@@ -32,6 +32,7 @@ type utopiaService struct {
 
 	Conn                *uchatbot.ChatBot
 	ConnEstablishedOnce bool
+	Pubkey              string
 }
 
 func newUtopiaService() *utopiaService {
@@ -128,9 +129,21 @@ func (u *utopiaService) updateAccountName() error {
 	}
 
 	if data.Nick == defaultAccountName {
+		log.Println("update account name..")
 		if err := u.Conn.SetAccountNickname(botNickname); err != nil {
 			return fmt.Errorf("set account nickname: %w", err)
 		}
 	}
+	return nil
+}
+
+func (u *utopiaService) loadBotPubkey() error {
+	var err error
+	u.Pubkey, err = u.Conn.GetOwnPubkey()
+	if err != nil {
+		return fmt.Errorf("get own pubkey: %w", err)
+	}
+
+	log.Printf("bot pubkey: %s\n", u.Pubkey)
 	return nil
 }
