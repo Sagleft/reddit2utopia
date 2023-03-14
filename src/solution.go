@@ -16,10 +16,13 @@ import (
 )
 
 func main() {
+	swissknife.PrintIntroMessage(botLogName, donateAddress, "CRP")
+
 	if err := runApp(); err != nil {
 		log.Fatalln(err)
 	}
 
+	log.Println("bot started")
 	swissknife.RunInBackground()
 }
 
