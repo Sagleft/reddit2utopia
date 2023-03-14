@@ -161,6 +161,11 @@ func (sol *solution) processSubreddit(
 		}
 		if isPostUsed {
 			postsUsedInQuery++
+			log.Printf(
+				"%q posted in %s\n",
+				post.ID,
+				utopiaChannelID,
+			)
 		}
 
 		if postsUsedInQuery == sol.Config.Main.MaxPostsPerQuery ||
