@@ -94,7 +94,18 @@ func (sol *solution) checkConfig() error {
 	return nil
 }
 
+func (sol *solution) markPostProcessing(isProcessing bool) {
+	sol.IsProcessingPost = isProcessing
+}
+
 func (sol *solution) findAndPlacePost() error {
+	if sol.IsProcessingPost {
+		return nil
+	}
+
+	sol.markPostProcessing(true)
+	defer sol.markPostProcessing(false)
+
 	fmt.Println()
 
 	credentials := reddit.Credentials{

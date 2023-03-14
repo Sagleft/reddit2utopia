@@ -11,7 +11,8 @@ type solution struct {
 	Utopia *utopiaService
 	Cache  *CacheHandler
 
-	FromSubreddits []string
+	FromSubreddits   []string
+	IsProcessingPost bool
 }
 
 type solutionConfig struct {
