@@ -20,3 +20,4 @@ build/
 *.sh
 cache/
 config.json
+docker-compose.yml
