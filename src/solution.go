@@ -35,13 +35,13 @@ func main() {
 func runApp() error {
 	sol := solution{}
 
-	err := sol.checkConfig()
+	var err error
+	sol.Config, err = parseConfig()
 	if err != nil {
 		return err
 	}
 
-	sol.Config, err = parseConfig()
-	if err != nil {
+	if err := sol.checkConfig(); err != nil {
 		return err
 	}
 
