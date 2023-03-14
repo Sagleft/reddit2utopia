@@ -13,87 +13,34 @@ import (
 	"github.com/fatih/color"
 )
 
-/*
-       _              _
-      | |            (_)
- _   _| |_ ___  _ __  _  __ _
-| | | | __/ _ \| '_ \| |/ _` |
-| |_| | || (_) | |_) | | (_| |
- \__,_|\__\___/| .__/|_|\__,_|
-               | |
-               |_|
-*/
-
 type utopiaService struct {
-	Token           string
-	Host            string
-	Port            int
-	HTTPSEnabled    bool
-	ChannelID       string
-	ChannelPassword string
-	AccountNickname string
-
 	Conn                *uchatbot.ChatBot
 	ConnEstablishedOnce bool
 	Pubkey              string
+	AccountNickname     string
 }
 
-func newUtopiaService() *utopiaService {
-	return &utopiaService{}
-}
+func utopiaConnect(
+	cfg utopiaConfig,
+	nickname string,
+	chats []uchatbot.Chat,
+) (*utopiaService, error) {
+	srv := &utopiaService{
+		AccountNickname: nickname,
+	}
 
-func (u *utopiaService) setChannelID(ID, password string) *utopiaService {
-	u.ChannelID = ID
-	u.ChannelPassword = password
-	return u
-}
-
-func (u *utopiaService) setNickname(nickname string) *utopiaService {
-	u.AccountNickname = nickname
-	return u
-}
-
-func (u *utopiaService) setToken(token string) *utopiaService {
-	u.Token = token
-	return u
-}
-
-func (u *utopiaService) setHost(host string) *utopiaService {
-	u.Host = host
-	return u
-}
-
-func (u *utopiaService) setPort(port int) *utopiaService {
-	u.Port = port
-	return u
-}
-
-func (u *utopiaService) setHTTPS(enabled bool) *utopiaService {
-	u.HTTPSEnabled = enabled
-	return u
-}
-
-func (u *utopiaService) connect() error {
 	protocol := "http"
-	if u.HTTPSEnabled {
+	if cfg.HTTPSEnabled {
 		protocol += "s"
 	}
 
-	chats := []uchatbot.Chat{}
-	if u.ChannelID != "" {
-		chats = append(chats, uchatbot.Chat{
-			ID:       u.ChannelID,
-			Password: u.ChannelPassword,
-		})
-	}
-
 	var err error
-	u.Conn, err = uchatbot.NewChatBot(uchatbot.ChatBotData{
+	srv.Conn, err = uchatbot.NewChatBot(uchatbot.ChatBotData{
 		Config: utopiago.Config{
 			Protocol: protocol,
-			Host:     u.Host,
-			Token:    u.Token,
-			Port:     u.Port,
+			Host:     cfg.Host,
+			Token:    cfg.Token,
+			Port:     cfg.Port,
 		},
 		Chats: chats,
 		Callbacks: uchatbot.ChatBotCallbacks{
@@ -106,9 +53,13 @@ func (u *utopiaService) connect() error {
 		},
 		UseErrorCallback: true,
 		DisableEvents:    true,
-		ErrorCallback:    u.onError,
+		ErrorCallback:    srv.onError,
 	})
-	return err
+	if err != nil {
+		return nil, fmt.Errorf("create chatbot: %w", err)
+	}
+
+	return srv, nil
 }
 
 func (u *utopiaService) onError(err error) {

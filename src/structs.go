@@ -1,5 +1,7 @@
 package main
 
+import "github.com/sagleft/go-reddit/v2/reddit"
+
 type mediaPost struct {
 	Text         string
 	ImageURL     string
@@ -10,6 +12,7 @@ type solution struct {
 	Config solutionConfig
 	Utopia *utopiaService
 	Cache  *CacheHandler
+	Reddit *reddit.Client
 
 	FromSubreddits   []string
 	IsProcessingPost bool
@@ -23,14 +26,12 @@ type solutionConfig struct {
 }
 
 type mainConfig struct {
-	BotNickname           string `envconfig:"BOT_NICKNAME" default:"UnboundMedia"`
-	ShowSource            bool   `envconfig:"SHOW_SOURCE" default:"false"`
-	MaxPostsPerQuery      int    `envconfig:"MAX_POSTS_PER_QUERY" default:"1"`
-	UsePostsPerQuery      int    `envconfig:"POSTS_PER_QUERY" default:"5"`
-	Cron                  string `envconfig:"CRON_SPEC" default:"@every 1h"`
-	UtopiaChannelID       string `envconfig:"UTOPIA_CHANNEL_ID" required:"true"`
-	UtopiaChannelPassword string `envconfig:"UTOPIA_CHANNEL_PASS"`
-	FromSubredditsRaw     string `envconfig:"FROM_SUBREDDITS" required:"true"`
+	BotNickname      string `envconfig:"BOT_NICKNAME" default:"UnboundMedia"`
+	ShowSource       bool   `envconfig:"SHOW_SOURCE" default:"false"`
+	MaxPostsPerQuery int    `envconfig:"MAX_POSTS_PER_QUERY" default:"1"`
+	UsePostsPerQuery int    `envconfig:"POSTS_PER_QUERY" default:"5"`
+	Routes           string `envconfig:"CONTENT_ROUTES" required:"true"`
+	Cron             string `envconfig:"CRON_SPEC" default:"every 1h"`
 }
 
 type utopiaConfig struct {
@@ -46,3 +47,11 @@ type redditConfig struct {
 	User      string `envconfig:"REDDIT_USER" required:"true"`
 	Password  string `envconfig:"REDDIT_PASS" required:"true"`
 }
+
+type contentRoute struct {
+	Password   string
+	Subreddits []string
+}
+
+// channel ID -> data
+type contentRoutes map[string]contentRoute

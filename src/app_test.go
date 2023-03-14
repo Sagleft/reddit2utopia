@@ -10,7 +10,6 @@ import (
 
 func TestParseConfig(t *testing.T) {
 	// given
-	os.Setenv("UTOPIA_CHANNEL_ID", "test")
 	os.Setenv("FROM_SUBREDDITS", "test,test")
 	os.Setenv("REDDIT_KEY_ID", "test")
 	os.Setenv("REDDIT_SECRET", "test")

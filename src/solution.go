@@ -2,10 +2,8 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
-	"strings"
 
 	swissknife "github.com/Sagleft/swiss-knife"
 	"github.com/badoux/goscraper"
@@ -34,24 +32,23 @@ func runApp() error {
 		return fmt.Errorf("parse config: %w", err)
 	}
 
-	if err := sol.checkConfig(); err != nil {
-		return fmt.Errorf("check config: %w", err)
-	}
-
 	sol.Cache, err = NewCacheHandler(cacheFolderPath)
 	if err != nil {
 		return fmt.Errorf("create cache handler: %w", err)
 	}
 
-	// create utopia obj
-	sol.Utopia = newUtopiaService().setToken(sol.Config.Utopia.Token).
-		setHost(sol.Config.Utopia.Host).setPort(sol.Config.Utopia.Port).
-		setHTTPS(sol.Config.Utopia.HTTPSEnabled).
-		setChannelID(sol.Config.Main.UtopiaChannelID, sol.Config.Main.UtopiaChannelPassword).
-		setNickname(sol.Config.Main.BotNickname)
+	log.Println("parse content routes..")
+	routes := parseContentRoutes(sol.Config.Main.Routes)
+
+	log.Println("get channels..")
+	chats := getChats(routes)
 
 	log.Println("connect to Utopia Network..")
-	if err := sol.Utopia.connect(); err != nil {
+	if sol.Utopia, err = utopiaConnect(
+		sol.Config.Utopia,
+		sol.Config.Main.BotNickname,
+		chats,
+	); err != nil {
 		return fmt.Errorf("connect to utopia: %w", err)
 	}
 
@@ -61,6 +58,11 @@ func runApp() error {
 
 	if err := sol.Utopia.loadBotPubkey(); err != nil {
 		return fmt.Errorf("load bot pubkey: %w", err)
+	}
+
+	log.Println("connect to reddit..")
+	if sol.Reddit, err = redditConnect(sol.Config.Reddit); err != nil {
+		return fmt.Errorf("reddit connect: %w", err)
 	}
 
 	log.Println("setup cron..")
@@ -83,18 +85,6 @@ func (sol *solution) setupCron() error {
 	return nil
 }
 
-func (sol *solution) checkConfig() error {
-	sol.FromSubreddits = strings.Split(sol.Config.Main.FromSubredditsRaw, ",")
-	if len(sol.FromSubreddits) == 0 {
-		return errors.New("subreddits is not set")
-	}
-
-	if sol.Config.Main.UtopiaChannelID == "" {
-		return errors.New("utopia channel ID is not set")
-	}
-	return nil
-}
-
 func (sol *solution) markPostProcessing(isProcessing bool) {
 	sol.IsProcessingPost = isProcessing
 }
@@ -109,18 +99,6 @@ func (sol *solution) findAndPlacePost() error {
 	defer sol.markPostProcessing(false)
 
 	fmt.Println()
-
-	credentials := reddit.Credentials{
-		ID:       sol.Config.Reddit.APIKeyID,
-		Secret:   sol.Config.Reddit.APISecret,
-		Username: sol.Config.Reddit.User,
-		Password: sol.Config.Reddit.Password,
-	}
-	// TODO: move to init
-	client, err := reddit.NewClient(credentials)
-	if err != nil {
-		return fmt.Errorf("connect to reddit: %w", err)
-	}
 
 	subreddit := GetRandomArrString(sol.FromSubreddits)
 	fmt.Println("use subreddit: " + subreddit)

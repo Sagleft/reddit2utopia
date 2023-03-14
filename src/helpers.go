@@ -5,7 +5,9 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/Sagleft/uchatbot-engine"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/sagleft/go-reddit/v2/reddit"
 )
 
 func parseCronSpec(spec string) string {
@@ -40,4 +42,57 @@ func parseConfig() (solutionConfig, error) {
 	}
 
 	return cfg, nil
+}
+
+func redditConnect(cfg redditConfig) (*reddit.Client, error) {
+	client, err := reddit.NewClient(reddit.Credentials{
+		ID:       cfg.APIKeyID,
+		Secret:   cfg.APISecret,
+		Username: cfg.User,
+		Password: cfg.Password,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("create reddit client: %w", err)
+	}
+	return client, nil
+}
+
+func parseContentRoutes(routes string) contentRoutes {
+	r := make(contentRoutes)
+
+	channels := strings.Split(routes, ";")
+
+	for i := 0; i < len(channels); i++ {
+		if channels[i] == "" {
+			continue
+		}
+
+		parts := strings.Split(channels[i], ":")
+		subreddits := strings.Split(parts[1], ",")
+		channelParts := strings.Split(parts[0], ",")
+		channelID := channelParts[0]
+		channelPassword := ""
+
+		if len(channelParts) > 1 {
+			channelPassword = channelParts[1]
+		}
+
+		r[channelID] = contentRoute{
+			Password:   channelPassword,
+			Subreddits: subreddits,
+		}
+	}
+
+	return r
+}
+
+func getChats(r contentRoutes) []uchatbot.Chat {
+	c := []uchatbot.Chat{}
+	for channelID, data := range r {
+		c = append(c, uchatbot.Chat{
+			ID:       channelID,
+			Password: data.Password,
+		})
+	}
+	return c
 }
