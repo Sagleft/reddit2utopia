@@ -2,11 +2,12 @@ package main
 
 import (
 	"encoding/base64"
-	"errors"
 	"fmt"
 	"io/ioutil"
 
+	"github.com/Sagleft/uchatbot-engine"
 	utopiago "github.com/Sagleft/utopialib-go/v2"
+	"github.com/Sagleft/utopialib-go/v2/pkg/structs"
 )
 
 /*
@@ -26,7 +27,7 @@ type utopiaService struct {
 	Port         int
 	HTTPSEnabled bool
 
-	Client utopiago.Client
+	Conn *uchatbot.ChatBot
 }
 
 func newUtopiaService() *utopiaService {
@@ -59,16 +60,27 @@ func (u *utopiaService) connect() error {
 		protocol += "s"
 	}
 
-	u.Client = utopiago.NewUtopiaClient(utopiago.Config{
-		Protocol: protocol,
-		Host:     u.Host,
-		Token:    u.Token,
-		Port:     u.Port,
+	/*if !u.Client.CheckClientConnection() {
+		return errors.New("failed to connect to Utopia client")
+	}*/
+
+	uchatbot.NewChatBot(uchatbot.ChatBotData{
+		Config: utopiago.Config{
+			Protocol: protocol,
+			Host:     u.Host,
+			Token:    u.Token,
+			Port:     u.Port,
+		},
+		Callbacks: uchatbot.ChatBotCallbacks{
+			OnContactMessage:        func(im structs.InstantMessage) {},
+			OnChannelMessage:        func(wcm structs.WsChannelMessage) {},
+			OnPrivateChannelMessage: func(wcm structs.WsChannelMessage) {},
+			WelcomeMessage: func(userPubkey string) string {
+				return welcomeMessage
+			},
+		},
 	})
 
-	if !u.Client.CheckClientConnection() {
-		return errors.New("failed to connect to Utopia client")
-	}
 	return nil
 }
 
@@ -85,18 +97,18 @@ func (u *utopiaService) postMedia(channelID string, media mediaPost) error {
 	}
 
 	base64Image := base64.StdEncoding.EncodeToString(imageBytes)
-	_, err = u.Client.SendChannelPicture(channelID, base64Image, media.Text, "photo.jpg")
+	_, err = u.Conn.GetClient().SendChannelPicture(channelID, base64Image, media.Text, "photo.jpg")
 	return err
 }
 
 func (u *utopiaService) updateAccountName() error {
-	data, err := u.Client.GetOwnContact()
+	data, err := u.Conn.GetClient().GetOwnContact()
 	if err != nil {
 		return fmt.Errorf("get own contact: %w", err)
 	}
 
 	if data.Nick == defaultAccountName {
-		if err := u.Client.SetProfileData(botNickname, "", ""); err != nil {
+		if err := u.Conn.SetAccountNickname(botNickname); err != nil {
 			return fmt.Errorf("set account nickname: %w", err)
 		}
 	}

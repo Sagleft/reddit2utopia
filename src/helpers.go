@@ -1,6 +1,9 @@
 package main
 
-import "unicode"
+import (
+	"strings"
+	"unicode"
+)
 
 func parseCronSpec(spec string) string {
 	runes := []rune(spec)
@@ -8,4 +11,12 @@ func parseCronSpec(spec string) string {
 		spec = "@" + spec
 	}
 	return spec
+}
+
+func getRedditURL(url string) string {
+	if strings.Contains(url, "http://") || strings.Contains(url, "https://") {
+		return url
+	}
+
+	return redditHost + url
 }

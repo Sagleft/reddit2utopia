@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/Sagleft/swiss-knife v1.3.0
+	github.com/Sagleft/uchatbot-engine v1.8.5
 	github.com/Sagleft/utopialib-go/v2 v2.7.2
 	github.com/badoux/goscraper v0.0.0-20190827161153-36995ce6b19f
 	github.com/kelseyhightower/envconfig v1.4.0
@@ -23,7 +24,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/sagleft/simple-cron v1.4.1 // indirect
+	github.com/sagleft/simple-cron v1.5.0 // indirect
 	golang.org/x/net v0.0.0-20220526153639-5463443f8c37 // indirect
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d // indirect
 	golang.org/x/sys v0.3.0 // indirect
