@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"io/ioutil"
 
 	utopiago "github.com/Sagleft/utopialib-go/v2"
@@ -86,4 +87,18 @@ func (u *utopiaService) postMedia(channelID string, media mediaPost) error {
 	base64Image := base64.StdEncoding.EncodeToString(imageBytes)
 	_, err = u.Client.SendChannelPicture(channelID, base64Image, media.Text, "photo.jpg")
 	return err
+}
+
+func (u *utopiaService) updateAccountName() error {
+	data, err := u.Client.GetOwnContact()
+	if err != nil {
+		return fmt.Errorf("get own contact: %w", err)
+	}
+
+	if data.Nick == defaultAccountName {
+		if err := u.Client.SetProfileData(botNickname, "", ""); err != nil {
+			return fmt.Errorf("set account nickname: %w", err)
+		}
+	}
+	return nil
 }

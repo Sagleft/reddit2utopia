@@ -60,6 +60,10 @@ func runApp() error {
 		return err
 	}
 
+	if err := sol.Utopia.updateAccountName(); err != nil {
+		return fmt.Errorf("update account name: %w", err)
+	}
+
 	if err := sol.setupCron(); err != nil {
 		return err
 	}
