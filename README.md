@@ -1,4 +1,4 @@
-![logo](https://github.com/Sagleft/reddit2utopia/raw/main/assets/logo.png)
+![logo](logo.jpg)
 
 ## concept
 
