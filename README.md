@@ -19,25 +19,25 @@ The finished build can be found on the [releases page.](releases)
 docker-compose up -d
 ```
 
-view bot logs:
+:information_source: view bot logs:
 
 ```bash
 docker container logs reddit2utopia_bot_1
 ```
 
-view Utopia client logs:
+:information_source: view Utopia client logs:
 
 ```bash
 docker container logs reddit2utopia_utopia-api_1
 ```
 
-If there is no container by this name, then you can find it through:
+:information_source: If there is no container by this name, then you can find it through:
 
 ```bash
 docker ps -a | grep reddit2utopia
 ```
 
-stop app:
+:information_source: stop app:
 
 ```bash
 docker-compose down
