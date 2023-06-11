@@ -1,11 +1,11 @@
-FROM golang:1.18.3-buster as builder
-WORKDIR /app
-RUN mkdir /app/cache
-COPY . .
+FROM golang:1.19-alpine
+
+COPY ./ /go/src
+WORKDIR /go/src
+RUN go get -v -t -d ./...
 RUN go build -o /app/bot
 
-FROM gcr.io/distroless/base
 WORKDIR /app
-COPY --from=builder /app /app
+RUN mkdir /app/cache
 
 CMD ["./bot"]

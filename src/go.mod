@@ -4,8 +4,8 @@ go 1.18
 
 require (
 	github.com/Sagleft/swiss-knife v1.3.0
-	github.com/Sagleft/uchatbot-engine v1.9.1
-	github.com/Sagleft/utopialib-go/v2 v2.7.2
+	github.com/Sagleft/uchatbot-engine v1.9.3
+	github.com/Sagleft/utopialib-go/v2 v2.8.2
 	github.com/badoux/goscraper v0.0.0-20190827161153-36995ce6b19f
 	github.com/fatih/color v1.14.1
 	github.com/kelseyhightower/envconfig v1.4.0
@@ -15,9 +15,9 @@ require (
 )
 
 require (
+	github.com/Sagleft/evtwebsocket v1.0.0 // indirect
 	github.com/beefsack/go-rate v0.0.0-20220214233405-116f4ca011a0 // indirect
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be // indirect
-	github.com/ctengiz/evtwebsocket v0.0.0-20180717104640-fc3583982591 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/protobuf v1.2.0 // indirect
 	github.com/google/go-querystring v1.0.0 // indirect

@@ -21,3 +21,4 @@ build/
 cache/
 config.json
 docker-compose.yml
+account.db
