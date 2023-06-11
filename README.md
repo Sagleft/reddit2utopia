@@ -1,6 +1,6 @@
 ![logo](logo.jpg)
 
-## concept
+## How it works
 
 This solution is useful for you if you want to create a channel in Utopia, but do not want to manually fill it with content. This bot will do everything for you.
 
@@ -9,7 +9,11 @@ The bot processes only those posts to which a link or image is attached.
 
 The finished build can be found on the [releases page.](releases)
 
-## run in docker
+## Setup
+
+Simply change the parameters in `docker-compose.yml` file.
+
+## Get started
 
 ```bash
 docker-compose up -d
@@ -38,10 +42,6 @@ stop app:
 ```bash
 docker-compose down
 ```
-
-## setup
-
-Simply change the parameters in `docker-compose.yml` file.
 
 ## useful links
 
