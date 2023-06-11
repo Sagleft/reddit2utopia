@@ -9,11 +9,11 @@ The bot processes only those posts to which a link or image is attached.
 
 The finished build can be found on the [releases page.](releases)
 
-## Setup
-
-Simply change the parameters in `docker-compose.yml` file.
-
 ## Get started
+
+1. Simply change the parameters in `docker-compose.yml` file.
+2. Put `account.db` Utopia account file in app directory.
+3. Run:
 
 ```bash
 docker-compose up -d
