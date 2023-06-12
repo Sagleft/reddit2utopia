@@ -9,6 +9,10 @@ The bot processes only those posts to which a link or image is attached.
 
 The finished build can be found on the [releases page.](releases)
 
+Example post:
+
+![screenshot](screenshot.png)
+
 ## :page_with_curl: Features
 
 1. The bot can work with multiple Utopia-channels & subreddits.
