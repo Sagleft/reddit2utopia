@@ -63,3 +63,6 @@ docker-compose down
 6. [Crypton Exchange API Examples](https://udocs.gitbook.io/utopia-api/crp.is-api/example-of-projects)
 7. [Developer Thread](https://talk.u.is/viewforum.php?id=8)
 8. [Utopia Official Website](https://u.is/)
+
+---
+[![udocs](https://github.com/Sagleft/ures/blob/master/udocs-btn.png?raw=true)](https://udocs.gitbook.io/utopia-api/)
