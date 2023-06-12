@@ -12,6 +12,8 @@ The finished build can be found on the [releases page.](releases)
 ## :page_with_curl: Features
 
 1. The bot can work with multiple Utopia-channels & subreddits.
+2. You can set the exact time of posts or the frequency.
+3. Very easy to run - the application works through the docker.
 
 ## :zap: Get started
 
