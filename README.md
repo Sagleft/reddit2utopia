@@ -15,7 +15,7 @@ The finished build can be found on the [releases page.](releases)
 
 ## Get started
 
-1. Simply change the parameters in `docker-compose.yml` file.
+1. Simply change the parameters in `docker-compose.yml` file (NOTE: do not change `UTOPIA_` params).
 2. Put `account.db` Utopia account file in app directory.
 3. Run:
 
