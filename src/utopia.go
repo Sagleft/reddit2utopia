@@ -97,12 +97,15 @@ func (u *utopiaService) postMedia(channelID string, media mediaPost) error {
 }
 
 func (u *utopiaService) updateAccountName() error {
+	if u.AccountNickname == "" {
+		return nil
+	}
+
 	data, err := u.Conn.GetClient().GetOwnContact()
 	if err != nil {
 		return fmt.Errorf("get own contact: %w", err)
 	}
-
-	if u.AccountNickname != "" && data.Nick != u.AccountNickname {
+	if data.Nick != u.AccountNickname {
 		log.Println("update account name..")
 		if err := u.Conn.SetAccountNickname(u.AccountNickname); err != nil {
 			return fmt.Errorf("set account nickname: %w", err)
