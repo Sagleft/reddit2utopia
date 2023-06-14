@@ -7,7 +7,7 @@ This solution is useful for you if you want to create a channel in Utopia, but d
 You choose the subreddit and the channel in Utopia to transfer these posts to. Further along the crown, call this bot to transfer 1 post from the last posts in 24 hours.
 The bot processes only those posts to which a link or image is attached.
 
-The finished build can be found on the [releases page.](releases)
+The finished build can be found on the [releases page.](https://github.com/Sagleft/reddit2utopia/releases)
 
 Example post:
 
